@@ -1,15 +1,27 @@
 package net.soartex.launcher;
 
+import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.StringReader;
 
+import java.net.URL;
+
+import java.util.HashMap;
 import java.util.prefs.Preferences;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 
+import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.events.SelectionListener;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.FillLayout;
+
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+
+import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
@@ -24,6 +36,10 @@ public class Soartex_Launcher {
 
 	private static final Preferences prefsnode = Preferences.userNodeForPackage(Soartex_Launcher.class).node(Strings.SOARTEX_LAUNCHER);
 	
+	private static URL tabledata;
+	
+	private static HashMap<TableItem, URL> moddatamap;
+	
 	// TODO: SWT Components
 	
 	private static Display display;
@@ -31,13 +47,15 @@ public class Soartex_Launcher {
 	
 	private static Table table;
 	
+	private static Button patch;
+	
 	// TODO: Methods
 	
 	public static void main (final String[] args) {
 
 		initializeShell();
 		
-		initializeComponents();
+		initializeComponents(args.length > 0 ? Boolean.parseBoolean(args[0]) : false);
 		
 		loadIcon();
 		
@@ -49,44 +67,89 @@ public class Soartex_Launcher {
 		
 		display = Display.getDefault();
 
-		shell = new Shell(display);
+		shell = new Shell(display, ~SWT.RESIZE & SWT.MIN);
 		
 		shell.setText(Strings.SOARTEX_LAUNCHER);
 		
 		shell.setLocation(prefsnode.getInt(Strings.PREF_X, 26), prefsnode.getInt(Strings.PREF_Y, 26));
-		shell.setSize(prefsnode.getInt(Strings.PREF_WIDTH, 960), prefsnode.getInt(Strings.PREF_HEIGHT, 717));
 
 		if (prefsnode.getBoolean(Strings.PREF_MAX, false)) shell.setMaximized(true);
 		
 		shell.addListener(SWT.Close, new ExitListener());
 		
-		shell.setLayout(new FillLayout());
+		final GridLayout layout = new GridLayout(1, false);
+		layout.marginWidth = 5;
+		layout.marginHeight = 5;
+		shell.setLayout(layout);
 		
 	}
 	
-	private static void initializeComponents () {
+	private static void initializeComponents (final boolean debug) {
+		
+		// TODO: Mod Table
 		
 	    table = new Table(shell, SWT.BORDER | SWT.CHECK);
 	    
-	    TableColumn name = new TableColumn(table, SWT.CENTER);
-	    TableColumn size = new TableColumn(table, SWT.CENTER);
+	    final TableColumn name = new TableColumn(table, SWT.CENTER);
+	    final TableColumn size = new TableColumn(table, SWT.CENTER);
 	    
-	    name.setText("Name");
-	    size.setText("Size");
+	    name.setText(Strings.NAME_COLUMN);
+	    size.setText(Strings.SIZE_COLUMN);
 	    
 	    table.setHeaderVisible(true);
-	 
-	    TableItem item1 = new TableItem(table, SWT.NONE);
-	    item1.setText(new String[] { "Industrial Craft 2", "10 mb" });
 	    
-	    TableItem item2 = new TableItem(table, SWT.NONE);
-	    item2.setText(new String[] { "Red Power 2", "2 mb" });
-	    
-	    TableItem item3 = new TableItem(table, SWT.NONE);
-	    item3.setText(new String[] { "Computer Craft", "7.5 mb" });
+	    loadTable(debug);
 	    
 	    name.pack();
 	    size.pack();
+	    
+	    // TODO: Patch Button
+	    
+	    final GridData gd = new GridData();
+		gd.grabExcessHorizontalSpace = true;
+		gd.grabExcessVerticalSpace = true;
+		gd.horizontalAlignment = SWT.FILL;
+		gd.verticalAlignment = SWT.FILL;
+	    
+	    patch = new Button(shell, SWT.PUSH);
+	    
+	    patch.setText(Strings.PATCH_BUTTON);
+	    
+	    patch.addSelectionListener(new PatchListener());
+		
+	    patch.setLayoutData(gd);
+	    
+	}
+	
+	private static void loadTable (final boolean debug) {
+		
+		try {
+			
+			tabledata = new URL(Strings.TABLE_DATA_URL);
+			
+			moddatamap = new HashMap<>();
+			
+			final BufferedReader in = new BufferedReader(debug ? new StringReader(Strings.DEBUG_TABLE) : new InputStreamReader(tabledata.openStream()));
+			
+			String readline = in.readLine();
+			
+			while (readline != null) {
+				
+				final TableItem item = new TableItem(table, SWT.NONE);
+				
+			    item.setText(new String[] { readline.split(Strings.COMMA)[0], readline.split(Strings.COMMA)[1] });
+				
+			    moddatamap.put(item, new URL(readline.split(Strings.COMMA)[2]));
+			    
+				readline = in.readLine();
+				
+			}
+			
+		} catch (final IOException e) {
+			
+			e.printStackTrace();
+			
+		}
 		
 	}
 	
@@ -118,6 +181,7 @@ public class Soartex_Launcher {
 	
 	private static void startEventLoop () {
 		
+		shell.pack();
 		shell.open();
 
 		while (!shell.isDisposed()) {
@@ -134,6 +198,22 @@ public class Soartex_Launcher {
 	
 	// TODO: Listeners
 	
+	private static final class PatchListener implements SelectionListener {
+
+		@Override public void widgetSelected (final SelectionEvent e) {
+			
+			for (final TableItem item : table.getItems()) {
+				
+				if (item.getChecked()) System.out.println(item.getText());
+				
+			}
+			
+		}
+
+		@Override public void widgetDefaultSelected (final SelectionEvent e) {}
+		
+	}
+	
 	private static final class ExitListener implements Listener {
 
 		@Override public void handleEvent (final Event event) {
@@ -146,9 +226,6 @@ public class Soartex_Launcher {
 
 				prefsnode.putInt(Strings.PREF_X, shell.getLocation().x);
 				prefsnode.putInt(Strings.PREF_Y, shell.getLocation().y);
-
-				prefsnode.putInt(Strings.PREF_WIDTH, shell.getSize().x);
-				prefsnode.putInt(Strings.PREF_HEIGHT, shell.getSize().y);
 
 				prefsnode.putBoolean(Strings.PREF_MAX, false);
 
@@ -171,12 +248,20 @@ public class Soartex_Launcher {
 		private static final String PREF_X = "x";
 		private static final String PREF_Y = "y";
 		
-		private static final String PREF_WIDTH = "width";
-		private static final String PREF_HEIGHT = "height";
-		
 		private static final String PREF_MAX = "maximized";
 		
 		private static final String ICON_NAME = "icon.png";
+		
+		private static final String NAME_COLUMN = "Name";
+		private static final String SIZE_COLUMN = "Size";
+		
+		private static final String TABLE_DATA_URL = "http://www.soartex.net/moddedpack/tabledata.csv";
+		
+		private static final String DEBUG_TABLE = "Industrial Craft 2,12345 mb,http://www.soartex.net/moddedpack/ic2.zip" + System.lineSeparator() + "Red Power 2,54321 mb,http://www.soartex.net/moddedpack/rp2.zip";
+		
+		private static final String COMMA = ",";
+		
+		private static final String PATCH_BUTTON = "Patch!";
 		
 	}
 
