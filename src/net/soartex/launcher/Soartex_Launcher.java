@@ -1,7 +1,9 @@
 package net.soartex.launcher;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringReader;
@@ -10,6 +12,8 @@ import java.net.URL;
 
 import java.util.HashMap;
 import java.util.prefs.Preferences;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
@@ -38,7 +42,9 @@ public class Soartex_Launcher {
 	
 	private static URL tabledata;
 	
-	private static HashMap<TableItem, URL> moddatamap;
+	private static HashMap<TableItem, String> moddatamap;
+	
+	private static boolean debug;
 	
 	// TODO: SWT Components
 	
@@ -52,10 +58,12 @@ public class Soartex_Launcher {
 	// TODO: Methods
 	
 	public static void main (final String[] args) {
+		
+		debug = args.length > 0 ? Boolean.parseBoolean(args[0]) : false;
 
 		initializeShell();
 		
-		initializeComponents(args.length > 0 ? Boolean.parseBoolean(args[0]) : false);
+		initializeComponents();
 		
 		loadIcon();
 		
@@ -84,7 +92,7 @@ public class Soartex_Launcher {
 		
 	}
 	
-	private static void initializeComponents (final boolean debug) {
+	private static void initializeComponents () {
 		
 		// TODO: Mod Table
 		
@@ -98,7 +106,7 @@ public class Soartex_Launcher {
 	    
 	    table.setHeaderVisible(true);
 	    
-	    loadTable(debug);
+	    loadTable();
 	    
 	    name.pack();
 	    size.pack();
@@ -121,7 +129,7 @@ public class Soartex_Launcher {
 	    
 	}
 	
-	private static void loadTable (final boolean debug) {
+	private static void loadTable () {
 		
 		try {
 			
@@ -139,7 +147,7 @@ public class Soartex_Launcher {
 				
 			    item.setText(new String[] { readline.split(Strings.COMMA)[0], readline.split(Strings.COMMA)[1] });
 				
-			    moddatamap.put(item, new URL(readline.split(Strings.COMMA)[2]));
+			    moddatamap.put(item, debug ? "C:\\Users\\redx3_000\\Downloads\\GoodMorningCraftv4.0.zip" : readline.split(Strings.COMMA)[2]);
 			    
 				readline = in.readLine();
 				
@@ -202,9 +210,61 @@ public class Soartex_Launcher {
 
 		@Override public void widgetSelected (final SelectionEvent e) {
 			
+			final byte[] buffer = new byte[1048576];
+			
+			new File(Strings.TEMPORARY_DATA_LOCATION).deleteOnExit();
+			
 			for (final TableItem item : table.getItems()) {
 				
-				if (item.getChecked()) System.out.println(item.getText());
+				if (item.getChecked()) {
+					
+					try (ZipInputStream in = new ZipInputStream(debug ? new FileInputStream(moddatamap.get(item)) : new URL(moddatamap.get(item)).openStream());) {
+						
+						ZipEntry zipentry = in.getNextEntry();
+						
+						while (zipentry != null) {
+
+							final String entryName = zipentry.getName();
+
+							final File destinationFile = new File(Strings.TEMPORARY_DATA_LOCATION + File.separator + entryName).getAbsoluteFile();
+							destinationFile.getParentFile().mkdirs();
+							destinationFile.deleteOnExit();
+							destinationFile.getParentFile().deleteOnExit();
+							
+							if (zipentry.isDirectory()) {
+								
+								zipentry = in.getNextEntry();
+								
+								continue;
+								
+							}
+							
+							System.out.println(destinationFile);
+
+							final FileOutputStream out = new FileOutputStream(destinationFile);
+
+							int len;
+							
+							while ((len = in.read(buffer)) > -1) {
+
+								out.write(buffer, 0, len);
+
+							}
+
+							out.close();
+
+							in.closeEntry();
+							zipentry = in.getNextEntry();
+
+						}
+						
+					} catch (final IOException e1) {
+
+						e1.printStackTrace();
+						
+					}
+					
+				}
 				
 			}
 			
@@ -245,6 +305,8 @@ public class Soartex_Launcher {
 		
 		private static final String SOARTEX_LAUNCHER = "Soartex Launcher";
 		
+		private static final String OS = System.getProperty("os.name").toUpperCase();
+		
 		private static final String PREF_X = "x";
 		private static final String PREF_Y = "y";
 		
@@ -262,6 +324,19 @@ public class Soartex_Launcher {
 		private static final String COMMA = ",";
 		
 		private static final String PATCH_BUTTON = "Patch!";
+		
+		public static final String TEMPORARY_DATA_LOCATION = getTMP() + File.separator + ".Soartex_Launcher";;
+		
+		private static String getTMP () {
+
+			if (OS.contains("WIN")) return System.getenv("TMP");
+
+			else if (OS.contains("MAC") || OS.contains("DARWIN")) return System.getProperty("user.home") + "/Library/Caches/";
+			else if (OS.contains("NUX")) return System.getProperty("user.home");
+
+			return System.getProperty("user.dir");
+
+		}
 		
 	}
 
