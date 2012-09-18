@@ -9,11 +9,11 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 
 import org.eclipse.swt.graphics.Image;
-
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Table;
 
 public class Soartex_Launcher {
 	
@@ -26,11 +26,15 @@ public class Soartex_Launcher {
 	private static Display display;
 	private static Shell shell;
 	
+	private static Table table;
+	
 	// TODO: Methods
 	
 	public static void main (final String[] args) {
 
 		initializeShell();
+		
+		initializeComponents();
 		
 		loadIcon();
 		
@@ -52,6 +56,15 @@ public class Soartex_Launcher {
 		if (prefsnode.getBoolean(Strings.PREF_MAX, false)) shell.setMaximized(true);
 		
 		shell.addListener(SWT.Close, new ExitListener());
+		
+	}
+	
+	private static void initializeComponents () {
+		
+		table = new Table(shell, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION);
+		
+		table.setLinesVisible(true);
+		table.setHeaderVisible(true);
 		
 	}
 	
