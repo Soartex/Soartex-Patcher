@@ -9,11 +9,14 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
 
 import org.eclipse.swt.graphics.Image;
+import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
+import org.eclipse.swt.widgets.TableColumn;
+import org.eclipse.swt.widgets.TableItem;
 
 public class Soartex_Launcher {
 	
@@ -57,14 +60,33 @@ public class Soartex_Launcher {
 		
 		shell.addListener(SWT.Close, new ExitListener());
 		
+		shell.setLayout(new FillLayout());
+		
 	}
 	
 	private static void initializeComponents () {
 		
-		table = new Table(shell, SWT.BORDER | SWT.MULTI | SWT.FULL_SELECTION);
-		
-		table.setLinesVisible(true);
-		table.setHeaderVisible(true);
+	    table = new Table(shell, SWT.BORDER | SWT.CHECK);
+	    
+	    TableColumn name = new TableColumn(table, SWT.CENTER);
+	    TableColumn size = new TableColumn(table, SWT.CENTER);
+	    
+	    name.setText("Name");
+	    size.setText("Size");
+	    
+	    table.setHeaderVisible(true);
+	 
+	    TableItem item1 = new TableItem(table, SWT.NONE);
+	    item1.setText(new String[] { "Industrial Craft 2", "10 mb" });
+	    
+	    TableItem item2 = new TableItem(table, SWT.NONE);
+	    item2.setText(new String[] { "Red Power 2", "2 mb" });
+	    
+	    TableItem item3 = new TableItem(table, SWT.NONE);
+	    item3.setText(new String[] { "Computer Craft", "7.5 mb" });
+	    
+	    name.pack();
+	    size.pack();
 		
 	}
 	
