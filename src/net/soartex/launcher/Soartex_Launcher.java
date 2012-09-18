@@ -12,6 +12,7 @@ import java.net.URL;
 
 import java.util.HashMap;
 import java.util.prefs.Preferences;
+
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -20,6 +21,7 @@ import org.eclipse.swt.SWTException;
 
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
+
 import org.eclipse.swt.graphics.Image;
 
 import org.eclipse.swt.layout.GridData;
@@ -75,7 +77,7 @@ public class Soartex_Launcher {
 		
 		display = Display.getDefault();
 
-		shell = new Shell(display, ~SWT.RESIZE & SWT.MIN);
+		shell = new Shell(display);
 		
 		shell.setText(Strings.SOARTEX_LAUNCHER);
 		
@@ -111,11 +113,18 @@ public class Soartex_Launcher {
 	    name.pack();
 	    size.pack();
 	    
-	    // TODO: Patch Button
-	    
-	    final GridData gd = new GridData();
+	    GridData gd = new GridData();
 		gd.grabExcessHorizontalSpace = true;
 		gd.grabExcessVerticalSpace = true;
+		gd.horizontalAlignment = SWT.FILL;
+		gd.verticalAlignment = SWT.FILL;
+		
+		table.setLayoutData(gd);
+	    
+	    // TODO: Patch Button
+	    
+	    gd = new GridData();
+		gd.grabExcessHorizontalSpace = true;
 		gd.horizontalAlignment = SWT.FILL;
 		gd.verticalAlignment = SWT.FILL;
 	    
