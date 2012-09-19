@@ -2,8 +2,15 @@ package net.soartex.launcher;
 
 enum StringNames {
 	
+	TECHNIC_BUTTON,
+	YOGSBOX_BUTTON,
+	ALL_BUTTON,
+	NONE_BUTTON,
+	
 	NAME_COLUMN,
 	SIZE_COLUMN,
+	
+	BROWSE_BUTTON,
 	
 	PATCH_BUTTON,
 	

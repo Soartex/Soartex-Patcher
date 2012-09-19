@@ -67,8 +67,15 @@ class Strings {
 	
 	public static final class English {
 		
+		public static final String TECHNIC_BUTTON = "Technic";
+		public static final String YOGSBOX_BUTTON = "Yogsbox";
+		public static final String ALL_BUTTON = "Select All";
+		public static final String NONE_BUTTON = "Select None";
+		
 		public static final String NAME_COLUMN = "Name";
 		public static final String SIZE_COLUMN = "Size";
+		
+		public static final String BROWSE_BUTTON = "Browse";
 		
 		public static final String PATCH_BUTTON = "Patch!";
 		

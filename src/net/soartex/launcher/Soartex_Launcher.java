@@ -37,6 +37,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
+import org.eclipse.swt.widgets.Text;
 
 public class Soartex_Launcher {
 	
@@ -66,6 +67,9 @@ public class Soartex_Launcher {
 	
 	private static TableColumn name;
 	private static TableColumn size;
+	
+	private static Text path;
+	private static Button browse;
 	
 	private static Button patch;
 	
@@ -121,9 +125,8 @@ public class Soartex_Launcher {
 		
 		shell.addListener(SWT.Close, new ExitListener());
 		
-		final GridLayout layout = new GridLayout(1, false);
-		layout.marginWidth = 5;
-		layout.marginHeight = 5;
+		final GridLayout layout = new GridLayout(4, false);
+		layout.makeColumnsEqualWidth = true;
 		shell.setLayout(layout);
 		
 	}
@@ -132,7 +135,32 @@ public class Soartex_Launcher {
 		
 		// TODO: Selection Buttons
 		
+		technic = new Button(shell, SWT.PUSH);
+		yogsbox = new Button(shell, SWT.PUSH);
+		all = new Button(shell, SWT.PUSH);
+		none = new Button(shell, SWT.PUSH);
+		
+		technic.setText(getString(StringNames.TECHNIC_BUTTON));
+		yogsbox.setText(getString(StringNames.YOGSBOX_BUTTON));
+		all.setText(getString(StringNames.ALL_BUTTON));
+		none.setText(getString(StringNames.NONE_BUTTON));
+		
+		SelectButtonsListener sblistener = new SelectButtonsListener();
+		
+		technic.addSelectionListener(sblistener);
+		yogsbox.addSelectionListener(sblistener);
+		all.addSelectionListener(sblistener);
+		none.addSelectionListener(sblistener);
+		
 		GridData gd = new GridData();
+		gd.grabExcessHorizontalSpace = true;
+		gd.horizontalAlignment = SWT.FILL;
+		gd.verticalAlignment = SWT.FILL;
+		
+		technic.setLayoutData(gd);
+		yogsbox.setLayoutData(gd);
+		all.setLayoutData(gd);
+		none.setLayoutData(gd);
 		
 		// TODO: Mod Table
 		
@@ -152,25 +180,50 @@ public class Soartex_Launcher {
 	    size.pack();
 	    
 	    gd = new GridData();
+	    gd.horizontalSpan = 4;
 		gd.grabExcessHorizontalSpace = true;
 		gd.grabExcessVerticalSpace = true;
 		gd.horizontalAlignment = SWT.FILL;
 		gd.verticalAlignment = SWT.FILL;
 		
 		table.setLayoutData(gd);
-	    
-	    // TODO: Patch Button
-	    
-	    gd = new GridData();
+		
+		// TODO: Path Field and Browse Button
+		
+		path = new Text(shell, SWT.BORDER);
+		
+		gd = new GridData();
+	    gd.horizontalSpan = 3;
 		gd.grabExcessHorizontalSpace = true;
 		gd.horizontalAlignment = SWT.FILL;
 		gd.verticalAlignment = SWT.FILL;
+		
+		path.setLayoutData(gd);
+		
+		browse = new Button(shell, SWT.PUSH);
+		
+		browse.setText(getString(StringNames.BROWSE_BUTTON));
+		
+		gd = new GridData();
+		gd.grabExcessHorizontalSpace = true;
+		gd.horizontalAlignment = SWT.FILL;
+		gd.verticalAlignment = SWT.FILL;
+		
+		browse.setLayoutData(gd);
+		
+		// TODO: Patch Button
 	    
 	    patch = new Button(shell, SWT.PUSH);
 	    
 	    patch.setText(getString(StringNames.PATCH_BUTTON));
 	    
 	    patch.addSelectionListener(new PatchListener());
+	    
+	    gd = new GridData();
+	    gd.horizontalSpan = 4;
+		gd.grabExcessHorizontalSpace = true;
+		gd.horizontalAlignment = SWT.FILL;
+		gd.verticalAlignment = SWT.FILL;
 		
 	    patch.setLayoutData(gd);
 	    
@@ -341,6 +394,26 @@ public class Soartex_Launcher {
 	}
 	
 	// TODO: Listeners
+	
+	private static final class SelectButtonsListener implements SelectionListener {
+
+		@Override public void widgetSelected (SelectionEvent e) {
+			
+			if (e.widget == all || e.widget == none) {
+				
+				for (TableItem item : table.getItems()) {
+					
+					item.setChecked(e.widget == all);
+					
+				}
+				
+			}
+			
+		}
+
+		@Override public void widgetDefaultSelected (SelectionEvent e) {}
+		
+	}
 	
 	private static final class PatchListener implements SelectionListener {
 
