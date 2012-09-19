@@ -10,11 +10,13 @@ import java.io.StringReader;
 
 import java.net.URL;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.prefs.Preferences;
 
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+import java.util.zip.ZipOutputStream;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.SWTException;
@@ -457,6 +459,8 @@ public class Soartex_Launcher {
 			
 			extractTexturePack();
 			
+			compressPatchedFiles();
+			
 		}
 
 		@Override public void widgetDefaultSelected (final SelectionEvent e) {}
@@ -573,7 +577,60 @@ public class Soartex_Launcher {
 		
 		private static void compressPatchedFiles () {
 			
+			try (ZipOutputStream out = new ZipOutputStream(new FileOutputStream(texturepack));) {
 			
+				final ArrayList<File> files = new ArrayList<>();
+				getFiles(new File(Strings.TEMPORARY_DATA_LOCATION), files);
+
+				for (final File fromfile : files) {
+
+					final String toname = fromfile.getAbsolutePath().substring(fromfile.getAbsolutePath().lastIndexOf(Strings.TEMPORARY_DATA_LOCATION) + Strings.TEMPORARY_DATA_LOCATION.length() + 1);
+	
+					final FileInputStream in = new FileInputStream(fromfile);
+	
+					final int length = (int) fromfile.length();
+	
+					final byte[] buffer = new byte[length];
+	
+					out.putNextEntry(new ZipEntry(toname));
+	
+					int len;
+	
+					while ((len = in.read(buffer, 0, length)) > 0) {
+	
+						out.write(buffer, 0, len);
+	
+					}
+	
+					out.closeEntry();
+	
+					out.flush();
+	
+					in.close();
+	
+				}
+
+			} catch (final IOException e) {
+				
+				e.printStackTrace();
+				
+			}
+			
+		}
+
+		private static void getFiles (final File f, final ArrayList<File> files) {
+			
+			if (f.isFile()) return;
+
+			final File[] afiles = f.getAbsoluteFile().listFiles();
+
+			for (final File file : afiles) {
+
+				if (file.isDirectory()) getFiles(file, files);
+
+				else files.add(file.getAbsoluteFile());
+
+			}
 			
 		}
 		
