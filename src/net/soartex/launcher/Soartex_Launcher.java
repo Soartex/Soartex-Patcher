@@ -31,6 +31,8 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Listener;
+import org.eclipse.swt.widgets.Menu;
+import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -48,6 +50,8 @@ public class Soartex_Launcher {
 	
 	private static boolean debug;
 	
+	private static Languages language = Languages.English;
+	
 	// TODO: SWT Components
 	
 	private static Display display;
@@ -55,7 +59,29 @@ public class Soartex_Launcher {
 	
 	private static Table table;
 	
+	private static TableColumn name;
+	private static TableColumn size;
+	
 	private static Button patch;
+	
+	// TODO: Menu Items
+
+	private static Menu menubar;
+
+	private static MenuItem languageitem;
+	private static Menu languagemenu;
+	
+	private static MenuItem englishitem;
+	private static MenuItem frenchitem;
+	private static MenuItem spanishitem;
+	private static MenuItem italianitem;
+	private static MenuItem germanitem;
+	private static MenuItem hebrewitem;
+	private static MenuItem arabicitem;
+	private static MenuItem chineseitem;
+	private static MenuItem japaneseitem;
+	
+	private static MenuItem helpitem;
 	
 	// TODO: Methods
 	
@@ -66,6 +92,8 @@ public class Soartex_Launcher {
 		initializeShell();
 		
 		initializeComponents();
+		
+		initializeMenus();
 		
 		loadIcon();
 		
@@ -81,7 +109,8 @@ public class Soartex_Launcher {
 		
 		shell.setText(Strings.SOARTEX_LAUNCHER);
 		
-		shell.setLocation(prefsnode.getInt(Strings.PREF_X, 26), prefsnode.getInt(Strings.PREF_Y, 26));
+		shell.setLocation(prefsnode.getInt(Strings.PREF_X, 100), prefsnode.getInt(Strings.PREF_Y, 100));
+		shell.setSize(prefsnode.getInt(Strings.PREF_WIDTH, 500), prefsnode.getInt(Strings.PREF_HEIGHT, 300));
 
 		if (prefsnode.getBoolean(Strings.PREF_MAX, false)) shell.setMaximized(true);
 		
@@ -100,11 +129,11 @@ public class Soartex_Launcher {
 		
 	    table = new Table(shell, SWT.BORDER | SWT.CHECK);
 	    
-	    final TableColumn name = new TableColumn(table, SWT.CENTER);
-	    final TableColumn size = new TableColumn(table, SWT.CENTER);
+	    name = new TableColumn(table, SWT.CENTER);
+	    size = new TableColumn(table, SWT.CENTER);
 	    
-	    name.setText(Strings.NAME_COLUMN);
-	    size.setText(Strings.SIZE_COLUMN);
+	    name.setText(getString(StringNames.NAME_COLUMN));
+	    size.setText(getString(StringNames.SIZE_COLUMN));
 	    
 	    table.setHeaderVisible(true);
 	    
@@ -130,12 +159,86 @@ public class Soartex_Launcher {
 	    
 	    patch = new Button(shell, SWT.PUSH);
 	    
-	    patch.setText(Strings.PATCH_BUTTON);
+	    patch.setText(getString(StringNames.PATCH_BUTTON));
 	    
 	    patch.addSelectionListener(new PatchListener());
 		
 	    patch.setLayoutData(gd);
 	    
+	}
+	
+	private static void initializeMenus () {
+
+		menubar = new Menu(shell, SWT.BAR);
+		
+		// TODO: Language
+		
+		languageitem = new MenuItem(menubar, SWT.CASCADE);
+		languageitem.setText(getString(StringNames.LANGUAGE_ITEM));
+		
+		languagemenu = new Menu(menubar);
+		languageitem.setMenu(languagemenu);
+		
+		final LanguageListener langlistener = new LanguageListener();
+		
+		englishitem = new MenuItem(languagemenu, SWT.RADIO);
+		englishitem.setText(getString(StringNames.ENGLISH_ITEM));
+		englishitem.addSelectionListener(langlistener);
+		
+		frenchitem = new MenuItem(languagemenu, SWT.RADIO);
+		frenchitem.setText(getString(StringNames.FRENCH_ITEM));
+		frenchitem.addSelectionListener(langlistener);
+		
+		spanishitem = new MenuItem(languagemenu, SWT.RADIO);
+		spanishitem.setText(getString(StringNames.SPANISH_ITEM));
+		spanishitem.addSelectionListener(langlistener);
+		
+		italianitem = new MenuItem(languagemenu, SWT.RADIO);
+		italianitem.setText(getString(StringNames.ITALIAN_ITEM));
+		italianitem.addSelectionListener(langlistener);
+		
+		germanitem = new MenuItem(languagemenu, SWT.RADIO);
+		germanitem.setText(getString(StringNames.GERMAN_ITEM));
+		germanitem.addSelectionListener(langlistener);
+		
+		hebrewitem = new MenuItem(languagemenu, SWT.RADIO);
+		hebrewitem.setText(getString(StringNames.HEBREW_ITEM));
+		hebrewitem.addSelectionListener(langlistener);
+		
+		arabicitem = new MenuItem(languagemenu, SWT.RADIO);
+		arabicitem.setText(getString(StringNames.ARABIC_ITEM));
+		arabicitem.addSelectionListener(langlistener);
+		
+		chineseitem = new MenuItem(languagemenu, SWT.RADIO);
+		chineseitem.setText(getString(StringNames.CHINESE_ITEM));
+		chineseitem.addSelectionListener(langlistener);
+		
+		japaneseitem = new MenuItem(languagemenu, SWT.RADIO);
+		japaneseitem.setText(getString(StringNames.JAPANESE_ITEM));
+		japaneseitem.addSelectionListener(langlistener);
+		
+		final String preflang = prefsnode.get(Strings.PREF_LANG, Languages.English.toString());
+		
+		if (preflang.equals(Languages.English.toString())) englishitem.setSelection(true);
+		if (preflang.equals(Languages.French.toString())) frenchitem.setSelection(true);
+		if (preflang.equals(Languages.Spanish.toString())) spanishitem.setSelection(true);
+		if (preflang.equals(Languages.German.toString())) germanitem.setSelection(true);
+		if (preflang.equals(Languages.Hebrew.toString())) hebrewitem.setSelection(true);
+		if (preflang.equals(Languages.Arabic.toString())) arabicitem.setSelection(true);
+		if (preflang.equals(Languages.Chinese.toString())) chineseitem.setSelection(true);
+		if (preflang.equals(Languages.Japanese.toString())) japaneseitem.setSelection(true);
+		
+		// TODO: Help
+		
+		helpitem = new MenuItem(menubar, SWT.NONE);
+		helpitem.setText(getString(StringNames.HELP_ITEM));
+		//helpitem.addSelectionListener(new HelpListener());
+		helpitem.setAccelerator(SWT.F1);
+		
+		langlistener.widgetSelected(null);
+		
+		shell.setMenuBar(menubar);
+		
 	}
 	
 	private static void loadTable () {
@@ -198,7 +301,6 @@ public class Soartex_Launcher {
 	
 	private static void startEventLoop () {
 		
-		shell.pack();
 		shell.open();
 
 		while (!shell.isDisposed()) {
@@ -210,6 +312,22 @@ public class Soartex_Launcher {
 		display.dispose();
 		
 		System.exit(0);
+		
+	}
+	
+	private static String getString (final StringNames name) {
+		
+		try {
+			
+			return Strings.getString(name, language);
+			
+		} catch (final Exception e) {
+			
+			e.printStackTrace();
+			
+			return Strings.SPACE;
+			
+		}
 		
 	}
 	
@@ -295,10 +413,15 @@ public class Soartex_Launcher {
 
 				prefsnode.putInt(Strings.PREF_X, shell.getLocation().x);
 				prefsnode.putInt(Strings.PREF_Y, shell.getLocation().y);
+				
+				prefsnode.putInt(Strings.PREF_WIDTH, shell.getSize().x);
+				prefsnode.putInt(Strings.PREF_HEIGHT, shell.getSize().y);
 
 				prefsnode.putBoolean(Strings.PREF_MAX, false);
 
 			}
+			
+			prefsnode.put(Strings.PREF_LANG, language.toString());
 			
 			event.doit = true;
 			
@@ -308,44 +431,63 @@ public class Soartex_Launcher {
 		
 	}
 	
-	// TODO: Strings
-	
-	private static final class Strings {
-		
-		private static final String SOARTEX_LAUNCHER = "Soartex Launcher";
-		
-		private static final String OS = System.getProperty("os.name").toUpperCase();
-		
-		private static final String PREF_X = "x";
-		private static final String PREF_Y = "y";
-		
-		private static final String PREF_MAX = "maximized";
-		
-		private static final String ICON_NAME = "icon.png";
-		
-		private static final String NAME_COLUMN = "Name";
-		private static final String SIZE_COLUMN = "Size";
-		
-		private static final String TABLE_DATA_URL = "http://www.soartex.net/moddedpack/tabledata.csv";
-		
-		private static final String DEBUG_TABLE = "Industrial Craft 2,12345 mb,http://www.soartex.net/moddedpack/ic2.zip" + System.lineSeparator() + "Red Power 2,54321 mb,http://www.soartex.net/moddedpack/rp2.zip";
-		
-		private static final String COMMA = ",";
-		
-		private static final String PATCH_BUTTON = "Patch!";
-		
-		public static final String TEMPORARY_DATA_LOCATION = getTMP() + File.separator + ".Soartex_Launcher";;
-		
-		private static String getTMP () {
+	private static final class LanguageListener implements SelectionListener {
 
-			if (OS.contains("WIN")) return System.getenv("TMP");
+		@Override public void widgetSelected (final SelectionEvent e) {
 
-			else if (OS.contains("MAC") || OS.contains("DARWIN")) return System.getProperty("user.home") + "/Library/Caches/";
-			else if (OS.contains("NUX")) return System.getProperty("user.home");
-
-			return System.getProperty("user.dir");
-
+			if (frenchitem.getSelection()) language = Languages.French;
+			else if (spanishitem.getSelection()) language = Languages.Spanish;
+			else if (italianitem.getSelection()) language = Languages.Italian;
+			else if (germanitem.getSelection()) language = Languages.German;
+			else if (hebrewitem.getSelection()) language = Languages.Hebrew;
+			else if (arabicitem.getSelection()) language = Languages.Arabic;
+			else if (chineseitem.getSelection()) language = Languages.Chinese;
+			else if (japaneseitem.getSelection()) language = Languages.Japanese;
+			else language = Languages.English;
+			
+			if (language == Languages.Hebrew | language == Languages.Arabic) {
+				
+				menubar.setOrientation(SWT.RIGHT_TO_LEFT);
+				languagemenu.setOrientation(SWT.RIGHT_TO_LEFT);
+				patch.setOrientation(SWT.RIGHT_TO_LEFT);
+				table.setOrientation(SWT.RIGHT_TO_LEFT);
+				
+			}
+			
+			else {
+				
+				menubar.setOrientation(SWT.LEFT_TO_RIGHT);
+				languagemenu.setOrientation(SWT.LEFT_TO_RIGHT);
+				patch.setOrientation(SWT.LEFT_TO_RIGHT);
+				table.setOrientation(SWT.LEFT_TO_RIGHT);
+				
+			}
+			
+			name.setText(getString(StringNames.NAME_COLUMN));
+			size.setText(getString(StringNames.SIZE_COLUMN));
+			
+			patch.setText(getString(StringNames.PATCH_BUTTON));
+			
+			languageitem.setText(getString(StringNames.LANGUAGE_ITEM));
+			
+			englishitem.setText(getString(StringNames.ENGLISH_ITEM));
+			frenchitem.setText(getString(StringNames.FRENCH_ITEM));
+			spanishitem.setText(getString(StringNames.SPANISH_ITEM));
+			italianitem.setText(getString(StringNames.ITALIAN_ITEM));
+			germanitem.setText(getString(StringNames.GERMAN_ITEM));
+			hebrewitem.setText(getString(StringNames.HEBREW_ITEM));
+			arabicitem.setText(getString(StringNames.ARABIC_ITEM));
+			chineseitem.setText(getString(StringNames.CHINESE_ITEM));
+			japaneseitem.setText(getString(StringNames.JAPANESE_ITEM));
+			
+			helpitem.setText(getString(StringNames.HELP_ITEM));
+			
+			name.pack();
+			size.pack();
+			
 		}
+
+		@Override public void widgetDefaultSelected (final SelectionEvent e) {}
 		
 	}
 
