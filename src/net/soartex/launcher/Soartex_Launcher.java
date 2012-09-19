@@ -30,6 +30,7 @@ import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
+import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
@@ -52,6 +53,8 @@ public class Soartex_Launcher {
 	private static boolean debug;
 	
 	private static Languages language = Languages.English;
+	
+	private static File texturepack;
 	
 	// TODO: SWT Components
 	
@@ -145,7 +148,7 @@ public class Soartex_Launcher {
 		all.setText(getString(StringNames.ALL_BUTTON));
 		none.setText(getString(StringNames.NONE_BUTTON));
 		
-		SelectButtonsListener sblistener = new SelectButtonsListener();
+		final SelectButtonsListener sblistener = new SelectButtonsListener();
 		
 		technic.addSelectionListener(sblistener);
 		yogsbox.addSelectionListener(sblistener);
@@ -204,6 +207,8 @@ public class Soartex_Launcher {
 		
 		browse.setText(getString(StringNames.BROWSE_BUTTON));
 		
+		browse.addSelectionListener(new BrowseListener());
+		
 		gd = new GridData();
 		gd.grabExcessHorizontalSpace = true;
 		gd.horizontalAlignment = SWT.FILL;
@@ -226,6 +231,8 @@ public class Soartex_Launcher {
 		gd.verticalAlignment = SWT.FILL;
 		
 	    patch.setLayoutData(gd);
+	    
+	    patch.setEnabled(false);
 	    
 	}
 	
@@ -397,11 +404,11 @@ public class Soartex_Launcher {
 	
 	private static final class SelectButtonsListener implements SelectionListener {
 
-		@Override public void widgetSelected (SelectionEvent e) {
+		@Override public void widgetSelected (final SelectionEvent e) {
 			
 			if (e.widget == all || e.widget == none) {
 				
-				for (TableItem item : table.getItems()) {
+				for (final TableItem item : table.getItems()) {
 					
 					item.setChecked(e.widget == all);
 					
@@ -411,13 +418,50 @@ public class Soartex_Launcher {
 			
 		}
 
-		@Override public void widgetDefaultSelected (SelectionEvent e) {}
+		@Override public void widgetDefaultSelected (final SelectionEvent e) {}
+		
+	}
+	
+	private static final class BrowseListener implements SelectionListener {
+
+		@Override public void widgetSelected (final SelectionEvent e) {
+			
+			final FileDialog dialog = new FileDialog(shell, SWT.OPEN);
+
+			dialog.setFilterNames(new String[] { getString(StringNames.ZIP_FILES) });
+			dialog.setFilterExtensions(new String[] { Strings.ZIP_FILES_EXT });
+			dialog.setFilterPath(System.getProperty(Strings.getMinecraftDir()));
+
+			final String selectedfile = dialog.open();
+			
+			if (selectedfile != null) {
+				
+				path.setText(selectedfile);
+				patch.setEnabled(true);
+				
+				texturepack = new File(selectedfile);
+				
+			}
+			
+		}
+
+		@Override public void widgetDefaultSelected (final SelectionEvent e) {}
 		
 	}
 	
 	private static final class PatchListener implements SelectionListener {
 
 		@Override public void widgetSelected (final SelectionEvent e) {
+			
+			extractModTextures();
+			
+			extractTexturePack();
+			
+		}
+
+		@Override public void widgetDefaultSelected (final SelectionEvent e) {}
+		
+		private static void extractModTextures () {
 			
 			final byte[] buffer = new byte[1048576];
 			
@@ -448,8 +492,6 @@ public class Soartex_Launcher {
 								
 							}
 							
-							System.out.println(destinationFile);
-
 							final FileOutputStream out = new FileOutputStream(destinationFile);
 
 							int len;
@@ -474,12 +516,66 @@ public class Soartex_Launcher {
 					}
 					
 				}
+			
+			}
+			
+		}
+		
+		private static void extractTexturePack () {
+			
+			final byte[] buffer = new byte[1048576];
+			
+			try (ZipInputStream in = new ZipInputStream(new FileInputStream(texturepack));) {
+				
+				ZipEntry zipentry = in.getNextEntry();
+				
+				while (zipentry != null) {
+
+					final String entryName = zipentry.getName();
+
+					final File destinationFile = new File(Strings.TEMPORARY_DATA_LOCATION + File.separator + entryName).getAbsoluteFile();
+					destinationFile.getParentFile().mkdirs();
+					destinationFile.deleteOnExit();
+					destinationFile.getParentFile().deleteOnExit();
+					
+					if (zipentry.isDirectory()) {
+						
+						zipentry = in.getNextEntry();
+						
+						continue;
+						
+					}
+					
+					final FileOutputStream out = new FileOutputStream(destinationFile);
+
+					int len;
+					
+					while ((len = in.read(buffer)) > -1) {
+
+						out.write(buffer, 0, len);
+
+					}
+
+					out.close();
+
+					in.closeEntry();
+					zipentry = in.getNextEntry();
+
+				}
+				
+			} catch (final IOException e1) {
+
+				e1.printStackTrace();
 				
 			}
 			
 		}
-
-		@Override public void widgetDefaultSelected (final SelectionEvent e) {}
+		
+		private static void compressPatchedFiles () {
+			
+			
+			
+		}
 		
 	}
 	

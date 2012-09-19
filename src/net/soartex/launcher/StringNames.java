@@ -12,6 +12,8 @@ enum StringNames {
 	
 	BROWSE_BUTTON,
 	
+	ZIP_FILES,
+	
 	PATCH_BUTTON,
 	
 	LANGUAGE_ITEM,

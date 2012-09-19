@@ -24,6 +24,8 @@ class Strings {
 	
 	static final String TEMPORARY_DATA_LOCATION = getTMP() + File.separator + ".Soartex_Launcher";;
 	
+	static final String ZIP_FILES_EXT = "*.zip";
+	
 	// TODO: Preferences Keys
 	
 	static final String PREF_X = "x";
@@ -65,6 +67,18 @@ class Strings {
 
 	}
 	
+	static String getMinecraftDir () {
+
+		if (OS.contains("WIN")) return System.getenv("APPDATA") + "\\.minecraft";
+
+		else if (OS.contains("MAC") || OS.contains("DARWIN")) return System.getProperty("user.home") + "/Library/Application Support/minecraft";
+		else if (OS.contains("NUX")) return System.getProperty("user.home");
+
+		return System.getProperty("user.dir");
+
+
+	}
+	
 	public static final class English {
 		
 		public static final String TECHNIC_BUTTON = "Technic";
@@ -76,6 +90,8 @@ class Strings {
 		public static final String SIZE_COLUMN = "Size";
 		
 		public static final String BROWSE_BUTTON = "Browse";
+		
+		public static final String ZIP_FILES = "Texture Packs (*.zip)";
 		
 		public static final String PATCH_BUTTON = "Patch!";
 		
