@@ -57,6 +57,11 @@ public class Soartex_Launcher {
 	private static Display display;
 	private static Shell shell;
 	
+	private static Button technic;
+	private static Button yogsbox;
+	private static Button all;
+	private static Button none;
+	
 	private static Table table;
 	
 	private static TableColumn name;
@@ -125,6 +130,10 @@ public class Soartex_Launcher {
 	
 	private static void initializeComponents () {
 		
+		// TODO: Selection Buttons
+		
+		GridData gd = new GridData();
+		
 		// TODO: Mod Table
 		
 	    table = new Table(shell, SWT.BORDER | SWT.CHECK);
@@ -142,7 +151,7 @@ public class Soartex_Launcher {
 	    name.pack();
 	    size.pack();
 	    
-	    GridData gd = new GridData();
+	    gd = new GridData();
 		gd.grabExcessHorizontalSpace = true;
 		gd.grabExcessVerticalSpace = true;
 		gd.horizontalAlignment = SWT.FILL;
