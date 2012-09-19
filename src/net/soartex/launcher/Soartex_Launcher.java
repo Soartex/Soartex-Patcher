@@ -12,6 +12,7 @@ import java.net.URL;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 import java.util.prefs.Preferences;
 
 import java.util.zip.ZipEntry;
@@ -36,6 +37,7 @@ import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
+import org.eclipse.swt.widgets.ProgressBar;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableColumn;
@@ -77,6 +79,8 @@ public class Soartex_Launcher {
 	private static Button browse;
 	
 	private static Button patch;
+	
+	private static ProgressBar progress;
 	
 	// TODO: Menu Items
 
@@ -227,7 +231,7 @@ public class Soartex_Launcher {
 	    patch.addSelectionListener(new PatchListener());
 	    
 	    gd = new GridData();
-	    gd.horizontalSpan = 4;
+	    gd.horizontalSpan = 2;
 		gd.grabExcessHorizontalSpace = true;
 		gd.horizontalAlignment = SWT.FILL;
 		gd.verticalAlignment = SWT.FILL;
@@ -236,6 +240,12 @@ public class Soartex_Launcher {
 	    
 	    patch.setEnabled(false);
 	    
+	    // TODO: Progress Bar
+	    
+	    progress = new ProgressBar(shell, SWT.NORMAL);
+	    
+	    progress.setLayoutData(gd);
+
 	}
 	
 	private static void initializeMenus () {
@@ -455,11 +465,73 @@ public class Soartex_Launcher {
 
 		@Override public void widgetSelected (final SelectionEvent e) {
 			
+			progress.setSelection(0);
+			
 			extractModTextures();
+			
+			for (int i = 0 ; i < 33 ; i++) {
+				
+				progress.setSelection(i);
+				
+				try { TimeUnit.MILLISECONDS.sleep(10); } catch (final InterruptedException e1) {}
+				
+			}
+			
+			progress.setSelection(33);
 			
 			extractTexturePack();
 			
+			for (int i = 33 ; i < 66 ; i++) {
+				
+				progress.setSelection(i);
+				
+				try { TimeUnit.MILLISECONDS.sleep(10); } catch (final InterruptedException e1) {}
+				
+			}
+			
+			progress.setSelection(66);
+			
 			compressPatchedFiles();
+			
+			for (int i = 66 ; i < 100 ; i++) {
+				
+				progress.setSelection(i);
+				
+				try { TimeUnit.MILLISECONDS.sleep(10); } catch (final InterruptedException e1) {}
+				
+			}
+			
+			progress.setSelection(100);
+			
+			new Thread(new Runnable() {
+				
+				@Override public void run () {
+					
+					try {
+						
+						TimeUnit.SECONDS.sleep(3);
+						
+					} catch (final InterruptedException e) {
+						
+						e.printStackTrace();
+						
+					} finally {
+						
+						display.asyncExec(new Runnable() {
+							
+							@Override public void run () {
+								
+								progress.setSelection(0);
+								
+							}
+							
+						});
+						
+					}
+					
+				}
+				
+			}).start();
 			
 		}
 
