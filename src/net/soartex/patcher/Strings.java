@@ -204,39 +204,39 @@ class Strings {
 	}
 	
 	public static final class Hebrew {
-		
-		public static final String NAME_COLUMN = "ש�?";
+
+		public static final String NAME_COLUMN = "שם";
 		public static final String SIZE_COLUMN = "גודל";
-		
-		public static final String PATCH_BUTTON = "להטלי�?!";
-		
+
+		public static final String PATCH_BUTTON = "להטליא!";
+
 		public static final String LANGUAGE_ITEM = "שפה";
-		
-		public static final String ENGLISH_ITEM = "�?נגלית";
+
+		public static final String ENGLISH_ITEM = "אנגלית";
 		public static final String FRENCH_ITEM = "צרפתי";
 		public static final String SPANISH_ITEM = "ספרדית";
-		public static final String ITALIAN_ITEM = "�?יטלקי";
+		public static final String ITALIAN_ITEM = "איטלקי";
 		public static final String GERMAN_ITEM = "גרמני";
 		public static final String HEBREW_ITEM = "עברית";
 		public static final String ARABIC_ITEM = "ערבית";
 		public static final String CHINESE_ITEM = "סיני";
 		public static final String JAPANESE_ITEM = "יפני";
-		
+
 		public static final String HELP_ITEM = "עזרה";
-		
+
 	}
-	
+
 	public static final class Arabic {
-		
+
 		public static final String NAME_COLUMN = "اسم";
 		public static final String SIZE_COLUMN = "حجم";
-		
+
 		public static final String PATCH_BUTTON = "حل!";
-		
+
 		public static final String LANGUAGE_ITEM = "لغة";
-		
+
 		public static final String ENGLISH_ITEM = "الإنجليزية";
-		public static final String FRENCH_ITEM = "�?رنسي";
+		public static final String FRENCH_ITEM = "فرنسي";
 		public static final String SPANISH_ITEM = "الأسباني";
 		public static final String ITALIAN_ITEM = "الإيطالي";
 		public static final String GERMAN_ITEM = "ألماني";
@@ -244,55 +244,55 @@ class Strings {
 		public static final String ARABIC_ITEM = "العربية";
 		public static final String CHINESE_ITEM = "الصينية";
 		public static final String JAPANESE_ITEM = "اليابانية";
-		
+
 		public static final String HELP_ITEM = "مساعدة";
-		
+
 	}
 
 	public static final class Chinese {
-		
-		public static final String NAME_COLUMN = "�??稱";
-		public static final String SIZE_COLUMN = "大�?";
-		
-		public static final String PATCH_BUTTON = "補�?�?";
-		
+
+		public static final String NAME_COLUMN = "名稱";
+		public static final String SIZE_COLUMN = "大小";
+
+		public static final String PATCH_BUTTON = "補丁！";
+
 		public static final String LANGUAGE_ITEM = "語";
-		
+
 		public static final String ENGLISH_ITEM = "英語";
 		public static final String FRENCH_ITEM = "法國人";
-		public static final String SPANISH_ITEM = "西�?�牙的";
-		public static final String ITALIAN_ITEM = "�?大利的";
+		public static final String SPANISH_ITEM = "西班牙的";
+		public static final String ITALIAN_ITEM = "意大利的";
 		public static final String GERMAN_ITEM = "德國的";
 		public static final String HEBREW_ITEM = "希伯來文";
 		public static final String ARABIC_ITEM = "阿拉伯語";
 		public static final String CHINESE_ITEM = "中國的";
 		public static final String JAPANESE_ITEM = "日本";
-		
-		public static final String HELP_ITEM = "�?�助";
-		
+
+		public static final String HELP_ITEM = "援助";
+
 	}
 
 	public static final class Japanese {
 
-		public static final String NAME_COLUMN = "�??�?";
-		public static final String SIZE_COLUMN = "大�??�?�";
-		
-		public static final String PATCH_BUTTON = "パッ�?�?";
-		
+		public static final String NAME_COLUMN = "名前";
+		public static final String SIZE_COLUMN = "大きさ";
+
+		public static final String PATCH_BUTTON = "パッチ！";
+
 		public static final String LANGUAGE_ITEM = "言語";
-		
+
 		public static final String ENGLISH_ITEM = "英語";
 		public static final String FRENCH_ITEM = "フランス語";
 		public static final String SPANISH_ITEM = "スペイン語";
 		public static final String ITALIAN_ITEM = "イタリア語";
 		public static final String GERMAN_ITEM = "ドイツ語";
-		public static final String HEBREW_ITEM = "ヘブライ語�?�";
+		public static final String HEBREW_ITEM = "ヘブライ語の";
 		public static final String ARABIC_ITEM = "アラビア語";
 		public static final String CHINESE_ITEM = "中国人";
 		public static final String JAPANESE_ITEM = "日本人";
-		
-		public static final String HELP_ITEM = "手助�?�";
-		
+
+		public static final String HELP_ITEM = "手助け";
+
 	}
 	
 }
