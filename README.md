@@ -1,4 +1,4 @@
-### Modded pack launcher for Soartex Fanver
+### Modded pack patcher for Soartex Fanver
 
 Features:
 
@@ -7,6 +7,8 @@ Features:
 * User selects location of zip to patch.
 * User hits button, program downloads and extracts zips for mods from server.
 * Program patches specified zip with mod textures.
+
+* * *
 
 To use this project clone the repository and download the SWT jar for your platform, don't worry, it's ignored.
 
