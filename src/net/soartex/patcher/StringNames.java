@@ -3,7 +3,7 @@ package net.soartex.patcher;
 enum StringNames {
 	
 	TECHNIC_BUTTON,
-	YOGSBOX_BUTTON,
+	FTB_BUTTON,
 	ALL_BUTTON,
 	NONE_BUTTON,
 	

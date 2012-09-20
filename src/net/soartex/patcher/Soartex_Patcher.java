@@ -6,11 +6,11 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.io.StringReader;
-
 import java.net.URL;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.prefs.Preferences;
@@ -66,14 +66,16 @@ public class Soartex_Patcher {
 	private static Shell shell;
 	
 	private static Button technic;
-	private static Button yogsbox;
+	private static Button ftb;
 	private static Button all;
 	private static Button none;
 	
 	private static Table table;
 	
 	private static TableColumn name;
+	private static TableColumn version;
 	private static TableColumn size;
+	private static TableColumn modified;
 	
 	private static Text path;
 	private static Button browse;
@@ -145,19 +147,19 @@ public class Soartex_Patcher {
 		// TODO: Selection Buttons
 		
 		technic = new Button(shell, SWT.PUSH);
-		yogsbox = new Button(shell, SWT.PUSH);
+		ftb = new Button(shell, SWT.PUSH);
 		all = new Button(shell, SWT.PUSH);
 		none = new Button(shell, SWT.PUSH);
 		
 		technic.setText(getString(StringNames.TECHNIC_BUTTON));
-		yogsbox.setText(getString(StringNames.YOGSBOX_BUTTON));
+		ftb.setText(getString(StringNames.FTB_BUTTON));
 		all.setText(getString(StringNames.ALL_BUTTON));
 		none.setText(getString(StringNames.NONE_BUTTON));
 		
 		final SelectButtonsListener sblistener = new SelectButtonsListener();
 		
 		technic.addSelectionListener(sblistener);
-		yogsbox.addSelectionListener(sblistener);
+		ftb.addSelectionListener(sblistener);
 		all.addSelectionListener(sblistener);
 		none.addSelectionListener(sblistener);
 		
@@ -167,26 +169,34 @@ public class Soartex_Patcher {
 		gd.verticalAlignment = SWT.FILL;
 		
 		technic.setLayoutData(gd);
-		yogsbox.setLayoutData(gd);
+		ftb.setLayoutData(gd);
 		all.setLayoutData(gd);
 		none.setLayoutData(gd);
+		
+		ftb.setEnabled(false);
 		
 		// TODO: Mod Table
 		
 	    table = new Table(shell, SWT.BORDER | SWT.CHECK);
 	    
 	    name = new TableColumn(table, SWT.CENTER);
+	    version = new TableColumn(table, SWT.CENTER);
 	    size = new TableColumn(table, SWT.CENTER);
+	    modified = new TableColumn(table, SWT.CENTER);
 	    
 	    name.setText(getString(StringNames.NAME_COLUMN));
+	    version.setText(getString(StringNames.NAME_COLUMN));
 	    size.setText(getString(StringNames.SIZE_COLUMN));
+	    modified.setText(getString(StringNames.SIZE_COLUMN));
 	    
 	    table.setHeaderVisible(true);
 	    
 	    loadTable();
 	    
 	    name.pack();
+	    version.pack();
 	    size.pack();
+	    modified.pack();
 	    
 	    gd = new GridData();
 	    gd.horizontalSpan = 4;
@@ -326,21 +336,52 @@ public class Soartex_Patcher {
 		
 		try {
 			
-			tabledata = new URL(Strings.TABLE_DATA_URL);
+			tabledata = new URL(Strings.MODDED_URL + Strings.MOD_CSV);
 			
 			moddatamap = new HashMap<>();
 			
-			final BufferedReader in = new BufferedReader(debug ? new StringReader(Strings.DEBUG_TABLE) : new InputStreamReader(tabledata.openStream()));
+			final BufferedReader in = new BufferedReader(new InputStreamReader(tabledata.openStream()));
 			
 			String readline = in.readLine();
 			
 			while (readline != null) {
 				
+				final URL zipurl = new URL(Strings.MODDED_URL + readline.split(Strings.COMMA)[0].replace(Strings.SPACE, Strings.UNDERSCORE) + Strings.ZIP_FILES_EXT.substring(1));
+				
+				try {
+					
+					zipurl.openStream();
+				
+				} catch (final IOException e) { 
+					
+					e.printStackTrace();
+					
+					readline = in.readLine();
+					
+					continue;
+				
+				}
+				
 				final TableItem item = new TableItem(table, SWT.NONE);
 				
-			    item.setText(new String[] { readline.split(Strings.COMMA)[0], readline.split(Strings.COMMA)[1] });
+				final String[] itemtext = new String[4];
 				
-			    moddatamap.put(item, debug ? "C:\\Users\\redx3_000\\Downloads\\GoodMorningCraftv4.0.zip" : readline.split(Strings.COMMA)[2]);
+				itemtext[0] = readline.split(Strings.COMMA)[0];
+				itemtext[1] = readline.split(Strings.COMMA)[1];
+				
+				final long size = zipurl.openConnection().getContentLengthLong();
+				
+				if (size > 1024) itemtext[2] = String.valueOf(size / 1024) + Strings.KILOBYTES;
+				
+				else if (size > 1024 * 1024) itemtext[2] = String.valueOf(size / (1024 * 1024)) + Strings.MEGABYTES;
+				
+				else itemtext[2] = String.valueOf(size) + Strings.BYTES;
+				
+				itemtext[3] = new SimpleDateFormat(Strings.DATE_FORMAT).format(new Date(zipurl.openConnection().getLastModified()));
+				
+			    item.setText(itemtext);
+				
+			    moddatamap.put(item, zipurl.toString());
 			    
 				readline = in.readLine();
 				
@@ -426,6 +467,30 @@ public class Soartex_Patcher {
 					
 				}
 				
+			} else if (e.widget == technic) {
+				
+				try (BufferedReader in = new BufferedReader(new InputStreamReader(new URL(Strings.MODDED_URL + Strings.TECHNIC_LIST).openStream()))) {
+					
+					String readline = in.readLine();
+					
+					while (readline != null) {
+
+						for (final TableItem item : table.getItems()) {
+							
+							if (readline.contains(item.getText())) item.setChecked(true);
+							
+						}
+						
+						readline = in.readLine();
+						
+					}
+					
+				} catch (final IOException e1) {
+					
+					e1.printStackTrace();
+					
+				}
+				
 			}
 			
 		}
@@ -466,7 +531,7 @@ public class Soartex_Patcher {
 		@Override public void widgetSelected (final SelectionEvent e) {
 			
 			technic.setEnabled(false);
-			yogsbox.setEnabled(false);
+			//ftb.setEnabled(false);
 			all.setEnabled(false);
 			none.setEnabled(false);
 			table.setEnabled(false);
@@ -513,7 +578,7 @@ public class Soartex_Patcher {
 			progress.setSelection(100);
 			
 			technic.setEnabled(true);
-			yogsbox.setEnabled(true);
+			//ftb.setEnabled(true);
 			all.setEnabled(true);
 			none.setEnabled(true);
 			table.setEnabled(true);
@@ -808,7 +873,9 @@ public class Soartex_Patcher {
 			helpitem.setText(getString(StringNames.HELP_ITEM));
 			
 			name.pack();
+			version.pack();
 			size.pack();
+			modified.pack();
 			
 		}
 

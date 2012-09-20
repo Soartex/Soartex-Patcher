@@ -14,13 +14,20 @@ class Strings {
 	
 	static final String ICON_NAME = "icon.png";
 	
-	static final String TABLE_DATA_URL = "http://www.soartex.net/moddedpack/tabledata.csv";
+	static final String MODDED_URL = "http://www.soartex.net/modded/";
 	
-	static final String DEBUG_TABLE = "Industrial Craft 2,12345 mb,http://www.soartex.net/moddedpack/ic2.zip" + System.lineSeparator() + "Red Power 2,54321 mb,http://www.soartex.net/moddedpack/rp2.zip";
+	static final String MOD_CSV = "mods.csv";
+	static final String TECHNIC_LIST = "technic.txt";
 	
 	static final String COMMA = ",";
-	
 	static final String SPACE = " ";
+	static final String UNDERSCORE = "_";
+	
+	static final String BYTES = " bytes";
+	static final String KILOBYTES = " kilobytes";
+	static final String MEGABYTES = " megabytes";
+	
+	static final String DATE_FORMAT = "MM/dd/yyyy";
 	
 	static final String TEMPORARY_DATA_LOCATION = getTMP() + File.separator + ".Soartex_Launcher";;
 	
@@ -82,7 +89,7 @@ class Strings {
 	public static final class English {
 		
 		public static final String TECHNIC_BUTTON = "Technic";
-		public static final String YOGSBOX_BUTTON = "Yogsbox";
+		public static final String FTB_BUTTON = "FTB (WIP!)";
 		public static final String ALL_BUTTON = "Select All";
 		public static final String NONE_BUTTON = "Select None";
 		
