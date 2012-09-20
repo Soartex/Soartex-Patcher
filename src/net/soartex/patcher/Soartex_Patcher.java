@@ -1,4 +1,4 @@
-package net.soartex.launcher;
+package net.soartex.patcher;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -44,11 +44,11 @@ import org.eclipse.swt.widgets.TableColumn;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Text;
 
-public class Soartex_Launcher {
+public class Soartex_Patcher {
 	
 	// TODO: Program Variables
 
-	private static final Preferences prefsnode = Preferences.userNodeForPackage(Soartex_Launcher.class).node(Strings.SOARTEX_LAUNCHER);
+	private static final Preferences prefsnode = Preferences.userNodeForPackage(Soartex_Patcher.class).node(Strings.SOARTEX_PATCHER);
 	
 	private static URL tabledata;
 	
@@ -125,7 +125,7 @@ public class Soartex_Launcher {
 
 		shell = new Shell(display);
 		
-		shell.setText(Strings.SOARTEX_LAUNCHER);
+		shell.setText(Strings.SOARTEX_PATCHER);
 		
 		shell.setLocation(prefsnode.getInt(Strings.PREF_X, 100), prefsnode.getInt(Strings.PREF_Y, 100));
 		shell.setSize(prefsnode.getInt(Strings.PREF_WIDTH, 500), prefsnode.getInt(Strings.PREF_HEIGHT, 300));
@@ -358,7 +358,7 @@ public class Soartex_Launcher {
 		
 		try {
 
-			final Image i = new Image(display, Soartex_Launcher.class.getClassLoader().getResourceAsStream(Strings.ICON_NAME));
+			final Image i = new Image(display, Soartex_Patcher.class.getClassLoader().getResourceAsStream(Strings.ICON_NAME));
 
 			shell.setImage(i);
 
@@ -465,6 +465,15 @@ public class Soartex_Launcher {
 
 		@Override public void widgetSelected (final SelectionEvent e) {
 			
+			technic.setEnabled(false);
+			yogsbox.setEnabled(false);
+			all.setEnabled(false);
+			none.setEnabled(false);
+			table.setEnabled(false);
+			path.setEnabled(false);
+			browse.setEnabled(false);
+			patch.setEnabled(false);
+			
 			progress.setSelection(0);
 			
 			extractModTextures();
@@ -473,7 +482,7 @@ public class Soartex_Launcher {
 				
 				progress.setSelection(i);
 				
-				try { TimeUnit.MILLISECONDS.sleep(10); } catch (final InterruptedException e1) {}
+				try { TimeUnit.MILLISECONDS.sleep(5); } catch (final InterruptedException e1) {}
 				
 			}
 			
@@ -485,7 +494,7 @@ public class Soartex_Launcher {
 				
 				progress.setSelection(i);
 				
-				try { TimeUnit.MILLISECONDS.sleep(10); } catch (final InterruptedException e1) {}
+				try { TimeUnit.MILLISECONDS.sleep(5); } catch (final InterruptedException e1) {}
 				
 			}
 			
@@ -497,11 +506,20 @@ public class Soartex_Launcher {
 				
 				progress.setSelection(i);
 				
-				try { TimeUnit.MILLISECONDS.sleep(10); } catch (final InterruptedException e1) {}
+				try { TimeUnit.MILLISECONDS.sleep(5); } catch (final InterruptedException e1) {}
 				
 			}
 			
 			progress.setSelection(100);
+			
+			technic.setEnabled(true);
+			yogsbox.setEnabled(true);
+			all.setEnabled(true);
+			none.setEnabled(true);
+			table.setEnabled(true);
+			path.setEnabled(true);
+			browse.setEnabled(true);
+			patch.setEnabled(true);
 			
 			new Thread(new Runnable() {
 				

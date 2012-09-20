@@ -1,4 +1,4 @@
-package net.soartex.launcher;
+package net.soartex.patcher;
 
 enum StringNames {
 	
