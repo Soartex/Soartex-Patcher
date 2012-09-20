@@ -94,7 +94,9 @@ class Strings {
 		public static final String NONE_BUTTON = "Select None";
 		
 		public static final String NAME_COLUMN = "Name";
+		public static final String VERSION_COLUMN = "Version";
 		public static final String SIZE_COLUMN = "Size";
+		public static final String MODIFIED_COLUMN = "Updated";
 		
 		public static final String BROWSE_BUTTON = "Browse";
 		

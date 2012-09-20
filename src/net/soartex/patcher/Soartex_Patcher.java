@@ -185,9 +185,9 @@ public class Soartex_Patcher {
 	    modified = new TableColumn(table, SWT.CENTER);
 	    
 	    name.setText(getString(StringNames.NAME_COLUMN));
-	    version.setText(getString(StringNames.NAME_COLUMN));
+	    version.setText(getString(StringNames.VERSION_COLUMN));
 	    size.setText(getString(StringNames.SIZE_COLUMN));
-	    modified.setText(getString(StringNames.SIZE_COLUMN));
+	    modified.setText(getString(StringNames.MODIFIED_COLUMN));
 	    
 	    table.setHeaderVisible(true);
 	    
@@ -422,6 +422,8 @@ public class Soartex_Patcher {
 	}
 	
 	private static void startEventLoop () {
+		
+		//shell.pack();
 		
 		shell.open();
 
