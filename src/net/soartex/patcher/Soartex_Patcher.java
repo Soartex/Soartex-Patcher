@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 
@@ -53,8 +54,6 @@ public class Soartex_Patcher {
 	private static URL tabledata;
 	
 	private static HashMap<TableItem, String> moddatamap;
-	
-	private static boolean debug;
 	
 	private static Languages language = Languages.English;
 	
@@ -107,8 +106,6 @@ public class Soartex_Patcher {
 	
 	public static void main (final String[] args) {
 		
-		debug = args.length > 0 ? Boolean.parseBoolean(args[0]) : false;
-
 		initializeShell();
 		
 		initializeComponents();
@@ -367,6 +364,9 @@ public class Soartex_Patcher {
 				final String[] itemtext = new String[4];
 				
 				itemtext[0] = readline.split(Strings.COMMA)[0];
+				
+				System.out.println(itemtext[0]);
+				
 				itemtext[1] = readline.split(Strings.COMMA)[1];
 				
 				final long size = zipurl.openConnection().getContentLengthLong();
@@ -422,8 +422,6 @@ public class Soartex_Patcher {
 	}
 	
 	private static void startEventLoop () {
-		
-		//shell.pack();
 		
 		shell.open();
 
@@ -543,9 +541,9 @@ public class Soartex_Patcher {
 			
 			progress.setSelection(0);
 			
-			extractModTextures();
+			downloadModTextures();
 			
-			for (int i = 0 ; i < 33 ; i++) {
+			for (int i = 0 ; i < 25 ; i++) {
 				
 				progress.setSelection(i);
 				
@@ -553,11 +551,23 @@ public class Soartex_Patcher {
 				
 			}
 			
-			progress.setSelection(33);
+			progress.setSelection(25);
+			
+			extractModTextures();
+			
+			for (int i = 25 ; i < 50 ; i++) {
+				
+				progress.setSelection(i);
+				
+				try { TimeUnit.MILLISECONDS.sleep(5); } catch (final InterruptedException e1) {}
+				
+			}
+			
+			progress.setSelection(50);
 			
 			extractTexturePack();
 			
-			for (int i = 33 ; i < 66 ; i++) {
+			for (int i = 50 ; i < 75 ; i++) {
 				
 				progress.setSelection(i);
 				
@@ -565,11 +575,11 @@ public class Soartex_Patcher {
 				
 			}
 			
-			progress.setSelection(66);
+			progress.setSelection(75);
 			
 			compressPatchedFiles();
 			
-			for (int i = 66 ; i < 100 ; i++) {
+			for (int i = 75 ; i < 100 ; i++) {
 				
 				progress.setSelection(i);
 				
@@ -622,62 +632,112 @@ public class Soartex_Patcher {
 
 		@Override public void widgetDefaultSelected (final SelectionEvent e) {}
 		
-		private static void extractModTextures () {
+		private static void downloadModTextures () {
 			
 			final byte[] buffer = new byte[1048576];
 			
-			new File(Strings.TEMPORARY_DATA_LOCATION).deleteOnExit();
+			new File(Strings.TEMPORARY_DATA_LOCATION_A).mkdirs();
+			new File(Strings.TEMPORARY_DATA_LOCATION_A).deleteOnExit();
 			
 			for (final TableItem item : table.getItems()) {
 				
 				if (item.getChecked()) {
 					
-					try (ZipInputStream in = new ZipInputStream(debug ? new FileInputStream(moddatamap.get(item)) : new URL(moddatamap.get(item)).openStream());) {
+					new Thread(new Runnable() {
 						
-						ZipEntry zipentry = in.getNextEntry();
-						
-						while (zipentry != null) {
-
-							final String entryName = zipentry.getName();
-
-							final File destinationFile = new File(Strings.TEMPORARY_DATA_LOCATION + File.separator + entryName).getAbsoluteFile();
-							destinationFile.getParentFile().mkdirs();
-							destinationFile.deleteOnExit();
-							destinationFile.getParentFile().deleteOnExit();
-							
-							if (zipentry.isDirectory()) {
+						@Override public void run () {
+					
+							try (InputStream in = new URL(moddatamap.get(item)).openStream()) {
 								
-								zipentry = in.getNextEntry();
+								final File destinationFile = new File(Strings.TEMPORARY_DATA_LOCATION_A + File.separator + new File(moddatamap.get(item)).getName()).getAbsoluteFile();
+								destinationFile.getParentFile().mkdirs();
+								destinationFile.deleteOnExit();
+								destinationFile.getParentFile().deleteOnExit();
 								
-								continue;
+								final FileOutputStream out = new FileOutputStream(destinationFile);
+		
+								int len;
+								
+								while ((len = in.read(buffer)) > -1) {
+		
+									out.write(buffer, 0, len);
+		
+								}
+		
+								out.close();						
+								
+							} catch (final IOException e) {
+								
+								e.printStackTrace();
 								
 							}
-							
-							final FileOutputStream out = new FileOutputStream(destinationFile);
-
-							int len;
-							
-							while ((len = in.read(buffer)) > -1) {
-
-								out.write(buffer, 0, len);
-
-							}
-
-							out.close();
-
-							in.closeEntry();
-							zipentry = in.getNextEntry();
-
+					
 						}
 						
-					} catch (final IOException e1) {
-
-						e1.printStackTrace();
-						
-					}
+					}).start();
 					
 				}
+				
+			}
 			
+		}
+		
+		private static void extractModTextures () {
+			
+			final byte[] buffer = new byte[1048576];
+			
+			new File(Strings.TEMPORARY_DATA_LOCATION_B).deleteOnExit();
+			
+			final ArrayList<File> files = new ArrayList<>();
+					
+			getFiles(new File(Strings.TEMPORARY_DATA_LOCATION_A), files);
+			
+			for (final File file : files) {
+				
+				try (ZipInputStream in = new ZipInputStream(new FileInputStream(file))) {
+					
+					ZipEntry zipentry = in.getNextEntry();
+					
+					while (zipentry != null) {
+
+						final String entryName = zipentry.getName();
+
+						final File destinationFile = new File(Strings.TEMPORARY_DATA_LOCATION_B + File.separator + entryName).getAbsoluteFile();
+						destinationFile.getParentFile().mkdirs();
+						destinationFile.deleteOnExit();
+						destinationFile.getParentFile().deleteOnExit();
+						
+						if (zipentry.isDirectory()) {
+							
+							zipentry = in.getNextEntry();
+							
+							continue;
+							
+						}
+						
+						final FileOutputStream out = new FileOutputStream(destinationFile);
+
+						int len;
+						
+						while ((len = in.read(buffer)) > -1) {
+
+							out.write(buffer, 0, len);
+
+						}
+
+						out.close();
+
+						in.closeEntry();
+						zipentry = in.getNextEntry();
+
+					}
+					
+				} catch (final IOException e1) {
+
+					e1.printStackTrace();
+					
+				}
+					
 			}
 			
 		}
@@ -694,7 +754,7 @@ public class Soartex_Patcher {
 
 					final String entryName = zipentry.getName();
 
-					final File destinationFile = new File(Strings.TEMPORARY_DATA_LOCATION + File.separator + entryName).getAbsoluteFile();
+					final File destinationFile = new File(Strings.TEMPORARY_DATA_LOCATION_B + File.separator + entryName).getAbsoluteFile();
 					destinationFile.getParentFile().mkdirs();
 					destinationFile.deleteOnExit();
 					destinationFile.getParentFile().deleteOnExit();
@@ -737,11 +797,11 @@ public class Soartex_Patcher {
 			try (ZipOutputStream out = new ZipOutputStream(new FileOutputStream(texturepack));) {
 			
 				final ArrayList<File> files = new ArrayList<>();
-				getFiles(new File(Strings.TEMPORARY_DATA_LOCATION), files);
+				getFiles(new File(Strings.TEMPORARY_DATA_LOCATION_B), files);
 
 				for (final File fromfile : files) {
 
-					final String toname = fromfile.getAbsolutePath().substring(fromfile.getAbsolutePath().lastIndexOf(Strings.TEMPORARY_DATA_LOCATION) + Strings.TEMPORARY_DATA_LOCATION.length() + 1);
+					final String toname = fromfile.getAbsolutePath().substring(fromfile.getAbsolutePath().lastIndexOf(Strings.TEMPORARY_DATA_LOCATION_B) + Strings.TEMPORARY_DATA_LOCATION_B.length() + 1);
 	
 					final FileInputStream in = new FileInputStream(fromfile);
 	
@@ -781,7 +841,11 @@ public class Soartex_Patcher {
 
 			final File[] afiles = f.getAbsoluteFile().listFiles();
 
+			if (afiles == null) return;
+			
 			for (final File file : afiles) {
+				
+				System.out.println(f.getAbsolutePath());
 
 				if (file.isDirectory()) getFiles(file, files);
 

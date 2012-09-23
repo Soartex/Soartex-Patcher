@@ -29,7 +29,8 @@ class Strings {
 	
 	static final String DATE_FORMAT = "MM/dd/yyyy";
 	
-	static final String TEMPORARY_DATA_LOCATION = getTMP() + File.separator + ".Soartex_Launcher";;
+	static final String TEMPORARY_DATA_LOCATION_A = getTMP() + File.separator + ".Soartex_Launcher_A";
+	static final String TEMPORARY_DATA_LOCATION_B = getTMP() + File.separator + ".Soartex_Launcher_B";
 	
 	static final String ZIP_FILES_EXT = "*.zip";
 	
