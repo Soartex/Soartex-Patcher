@@ -6,46 +6,6 @@ import java.lang.reflect.Field;
 
 class Strings {
 	
-	// TODO: Important Strings
-	
-	static final String SOARTEX_PATCHER = "Soartex Patcher";
-	
-	static final String OS = System.getProperty("os.name").toUpperCase();
-	
-	static final String ICON_NAME = "icon.png";
-	
-	static final String MODDED_URL = "http://www.soartex.net/modded/";
-	
-	static final String MOD_CSV = "mods.csv";
-	static final String TECHNIC_LIST = "technic.txt";
-	
-	static final String COMMA = ",";
-	static final String SPACE = " ";
-	static final String UNDERSCORE = "_";
-	
-	static final String BYTES = " bytes";
-	static final String KILOBYTES = " kilobytes";
-	static final String MEGABYTES = " megabytes";
-	
-	static final String DATE_FORMAT = "MM/dd/yyyy";
-	
-	static final String TEMPORARY_DATA_LOCATION_A = getTMP() + File.separator + ".Soartex_Launcher_A";
-	static final String TEMPORARY_DATA_LOCATION_B = getTMP() + File.separator + ".Soartex_Launcher_B";
-	
-	static final String ZIP_FILES_EXT = "*.zip";
-	
-	// TODO: Preferences Keys
-	
-	static final String PREF_X = "x";
-	static final String PREF_Y = "y";
-	
-	static final String PREF_WIDTH = "width";
-	static final String PREF_HEIGHT = "height";
-	
-	static final String PREF_MAX = "maximized";
-	
-	static final String PREF_LANG = "language";
-
 	static String getString (final StringNames name, final Languages language) throws Exception {
 		
 		Field field;
@@ -64,27 +24,74 @@ class Strings {
 			
 	}
 	
-	private static String getTMP () {
+	static final class Common {
+		
+		// TODO: Important Strings
+		
+		static final String SOARTEX_PATCHER = "Soartex Patcher";
+		
+		static final String OS = System.getProperty("os.name").toUpperCase();
+		
+		static final String ICON_NAME = "icon.png";
+		
+		static final String MODDED_URL = "http://www.soartex.net/modded/";
+		
+		static final String MOD_CSV = "mods.csv";
+		static final String TECHNIC_LIST = "technic.txt";
+		static final String FTB_LIST = "ftb.txt";
+		
+		static final String COMMA = ",";
+		static final String SPACE = " ";
+		static final String UNDERSCORE = "_";
+		
+		static final String BYTES = " bytes";
+		static final String KILOBYTES = " kilobytes";
+		static final String MEGABYTES = " megabytes";
+		
+		static final String DATE_FORMAT = "MM/dd/yyyy";
+		
+		static final String TEMPORARY_DATA_LOCATION_A = getTMP() + File.separator + ".Soartex_Launcher_A";
+		static final String TEMPORARY_DATA_LOCATION_B = getTMP() + File.separator + ".Soartex_Launcher_B";
+		
+		static final String ZIP_FILES_EXT = "*.zip";
+		
+		// TODO: Preferences Keys
+		
+		static final String PREF_X = "x";
+		static final String PREF_Y = "y";
+		
+		static final String PREF_WIDTH = "width";
+		static final String PREF_HEIGHT = "height";
+		
+		static final String PREF_MAX = "maximized";
+		
+		static final String PREF_LANG = "language";
+		
+		// TODO: Methods
+		
+		private static String getTMP () {
 
-		if (OS.contains("WIN")) return System.getenv("TMP");
+			if (OS.contains("WIN")) return System.getenv("TMP");
 
-		else if (OS.contains("MAC") || OS.contains("DARWIN")) return System.getProperty("user.home") + "/Library/Caches/";
-		else if (OS.contains("NUX")) return System.getProperty("user.home");
+			else if (OS.contains("MAC") || OS.contains("DARWIN")) return System.getProperty("user.home") + "/Library/Caches/";
+			else if (OS.contains("NUX")) return System.getProperty("user.home");
 
-		return System.getProperty("user.dir");
+			return System.getProperty("user.dir");
 
-	}
-	
-	static String getMinecraftDir () {
+		}
+		
+		static String getMinecraftDir () {
 
-		if (OS.contains("WIN")) return System.getenv("APPDATA") + "\\.minecraft";
+			if (OS.contains("WIN")) return System.getenv("APPDATA") + "\\.minecraft";
 
-		else if (OS.contains("MAC") || OS.contains("DARWIN")) return System.getProperty("user.home") + "/Library/Application Support/minecraft";
-		else if (OS.contains("NUX")) return System.getProperty("user.home");
+			else if (OS.contains("MAC") || OS.contains("DARWIN")) return System.getProperty("user.home") + "/Library/Application Support/minecraft";
+			else if (OS.contains("NUX")) return System.getProperty("user.home");
 
-		return System.getProperty("user.dir");
+			return System.getProperty("user.dir");
 
 
+		}
+		
 	}
 	
 	public static final class English {

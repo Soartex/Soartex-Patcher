@@ -15,7 +15,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+
 import java.util.concurrent.TimeUnit;
+
 import java.util.prefs.Preferences;
 
 import java.util.zip.ZipEntry;
@@ -52,7 +54,7 @@ public class Soartex_Patcher {
 	
 	// TODO: Program Variables
 
-	private static final Preferences prefsnode = Preferences.userNodeForPackage(Soartex_Patcher.class).node(Strings.SOARTEX_PATCHER);
+	private static final Preferences prefsnode = Preferences.userNodeForPackage(Soartex_Patcher.class).node(Strings.Common.SOARTEX_PATCHER);
 	
 	private static URL tabledata;
 	
@@ -127,12 +129,12 @@ public class Soartex_Patcher {
 
 		shell = new Shell(display);
 		
-		shell.setText(Strings.SOARTEX_PATCHER);
+		shell.setText(Strings.Common.SOARTEX_PATCHER);
 		
-		shell.setLocation(prefsnode.getInt(Strings.PREF_X, 100), prefsnode.getInt(Strings.PREF_Y, 100));
-		shell.setSize(prefsnode.getInt(Strings.PREF_WIDTH, 500), prefsnode.getInt(Strings.PREF_HEIGHT, 300));
+		shell.setLocation(prefsnode.getInt(Strings.Common.PREF_X, 100), prefsnode.getInt(Strings.Common.PREF_Y, 100));
+		shell.setSize(prefsnode.getInt(Strings.Common.PREF_WIDTH, 500), prefsnode.getInt(Strings.Common.PREF_HEIGHT, 300));
 
-		if (prefsnode.getBoolean(Strings.PREF_MAX, false)) shell.setMaximized(true);
+		if (prefsnode.getBoolean(Strings.Common.PREF_MAX, false)) shell.setMaximized(true);
 		
 		shell.addListener(SWT.Close, new ExitListener());
 		
@@ -308,7 +310,7 @@ public class Soartex_Patcher {
 		japaneseitem.setText(getString(StringNames.JAPANESE_ITEM));
 		japaneseitem.addSelectionListener(langlistener);
 		
-		final String preflang = prefsnode.get(Strings.PREF_LANG, Languages.English.toString());
+		final String preflang = prefsnode.get(Strings.Common.PREF_LANG, Languages.English.toString());
 		
 		if (preflang.equals(Languages.English.toString())) englishitem.setSelection(true);
 		if (preflang.equals(Languages.French.toString())) frenchitem.setSelection(true);
@@ -344,7 +346,7 @@ public class Soartex_Patcher {
 		
 		try {
 
-			final Image i = new Image(display, Soartex_Patcher.class.getClassLoader().getResourceAsStream(Strings.ICON_NAME));
+			final Image i = new Image(display, Soartex_Patcher.class.getClassLoader().getResourceAsStream(Strings.Common.ICON_NAME));
 
 			shell.setImage(i);
 
@@ -352,7 +354,7 @@ public class Soartex_Patcher {
 
 			try {
 
-				final FileInputStream in = new FileInputStream(Strings.ICON_NAME);
+				final FileInputStream in = new FileInputStream(Strings.Common.ICON_NAME);
 
 				final Image i = new Image(display, in);
 
@@ -388,7 +390,7 @@ public class Soartex_Patcher {
 			
 			e.printStackTrace();
 			
-			return Strings.SPACE;
+			return Strings.Common.SPACE;
 			
 		}
 		
@@ -410,7 +412,31 @@ public class Soartex_Patcher {
 				
 			} else if (e.widget == technic) {
 				
-				try (BufferedReader in = new BufferedReader(new InputStreamReader(new URL(Strings.MODDED_URL + Strings.TECHNIC_LIST).openStream()))) {
+				try (BufferedReader in = new BufferedReader(new InputStreamReader(new URL(Strings.Common.MODDED_URL + Strings.Common.TECHNIC_LIST).openStream()))) {
+					
+					String readline = in.readLine();
+					
+					while (readline != null) {
+
+						for (final TableItem item : table.getItems()) {
+							
+							if (readline.contains(item.getText())) item.setChecked(true);
+							
+						}
+						
+						readline = in.readLine();
+						
+					}
+					
+				} catch (final IOException e1) {
+					
+					e1.printStackTrace();
+					
+				}
+				
+			} else if (e.widget == ftb) {
+				
+				try (BufferedReader in = new BufferedReader(new InputStreamReader(new URL(Strings.Common.MODDED_URL + Strings.Common.FTB_LIST).openStream()))) {
 					
 					String readline = in.readLine();
 					
@@ -447,8 +473,8 @@ public class Soartex_Patcher {
 			final FileDialog dialog = new FileDialog(shell, SWT.OPEN);
 
 			dialog.setFilterNames(new String[] { getString(StringNames.ZIP_FILES) });
-			dialog.setFilterExtensions(new String[] { Strings.ZIP_FILES_EXT });
-			dialog.setFilterPath(System.getProperty(Strings.getMinecraftDir()));
+			dialog.setFilterExtensions(new String[] { Strings.Common.ZIP_FILES_EXT });
+			dialog.setFilterPath(System.getProperty(Strings.Common.getMinecraftDir()));
 
 			final String selectedfile = dialog.open();
 			
@@ -577,45 +603,37 @@ public class Soartex_Patcher {
 			
 			final byte[] buffer = new byte[1048576];
 			
-			new File(Strings.TEMPORARY_DATA_LOCATION_A).mkdirs();
-			new File(Strings.TEMPORARY_DATA_LOCATION_A).deleteOnExit();
+			new File(Strings.Common.TEMPORARY_DATA_LOCATION_A).mkdirs();
+			new File(Strings.Common.TEMPORARY_DATA_LOCATION_A).deleteOnExit();
 			
 			for (final TableItem item : table.getItems()) {
 				
 				if (item.getChecked()) {
 					
-					new Thread(new Runnable() {
+					try (InputStream in = new URL(moddatamap.get(item)).openStream()) {
 						
-						@Override public void run () {
-					
-							try (InputStream in = new URL(moddatamap.get(item)).openStream()) {
-								
-								final File destinationFile = new File(Strings.TEMPORARY_DATA_LOCATION_A + File.separator + new File(moddatamap.get(item)).getName()).getAbsoluteFile();
-								destinationFile.getParentFile().mkdirs();
-								destinationFile.deleteOnExit();
-								destinationFile.getParentFile().deleteOnExit();
-								
-								final FileOutputStream out = new FileOutputStream(destinationFile);
-		
-								int len;
-								
-								while ((len = in.read(buffer)) > -1) {
-		
-									out.write(buffer, 0, len);
-		
-								}
-		
-								out.close();						
-								
-							} catch (final IOException e) {
-								
-								e.printStackTrace();
-								
-							}
-					
+						final File destinationFile = new File(Strings.Common.TEMPORARY_DATA_LOCATION_A + File.separator + new File(moddatamap.get(item)).getName()).getAbsoluteFile();
+						destinationFile.getParentFile().mkdirs();
+						destinationFile.deleteOnExit();
+						destinationFile.getParentFile().deleteOnExit();
+						
+						final FileOutputStream out = new FileOutputStream(destinationFile);
+
+						int len;
+						
+						while ((len = in.read(buffer)) > -1) {
+
+							out.write(buffer, 0, len);
+
 						}
+
+						out.close();						
 						
-					}).start();
+					} catch (final IOException e) {
+						
+						e.printStackTrace();
+						
+					}
 					
 				}
 				
@@ -627,11 +645,11 @@ public class Soartex_Patcher {
 			
 			final byte[] buffer = new byte[1048576];
 			
-			new File(Strings.TEMPORARY_DATA_LOCATION_B).deleteOnExit();
+			new File(Strings.Common.TEMPORARY_DATA_LOCATION_B).deleteOnExit();
 			
 			final ArrayList<File> files = new ArrayList<>();
 					
-			getFiles(new File(Strings.TEMPORARY_DATA_LOCATION_A), files);
+			getFiles(new File(Strings.Common.TEMPORARY_DATA_LOCATION_A), files);
 			
 			for (final File file : files) {
 				
@@ -643,7 +661,7 @@ public class Soartex_Patcher {
 
 						final String entryName = zipentry.getName();
 
-						final File destinationFile = new File(Strings.TEMPORARY_DATA_LOCATION_B + File.separator + entryName).getAbsoluteFile();
+						final File destinationFile = new File(Strings.Common.TEMPORARY_DATA_LOCATION_B + File.separator + entryName).getAbsoluteFile();
 						destinationFile.getParentFile().mkdirs();
 						destinationFile.deleteOnExit();
 						destinationFile.getParentFile().deleteOnExit();
@@ -695,7 +713,7 @@ public class Soartex_Patcher {
 
 					final String entryName = zipentry.getName();
 
-					final File destinationFile = new File(Strings.TEMPORARY_DATA_LOCATION_B + File.separator + entryName).getAbsoluteFile();
+					final File destinationFile = new File(Strings.Common.TEMPORARY_DATA_LOCATION_B + File.separator + entryName).getAbsoluteFile();
 					destinationFile.getParentFile().mkdirs();
 					destinationFile.deleteOnExit();
 					destinationFile.getParentFile().deleteOnExit();
@@ -738,11 +756,11 @@ public class Soartex_Patcher {
 			try (ZipOutputStream out = new ZipOutputStream(new FileOutputStream(texturepack));) {
 			
 				final ArrayList<File> files = new ArrayList<>();
-				getFiles(new File(Strings.TEMPORARY_DATA_LOCATION_B), files);
+				getFiles(new File(Strings.Common.TEMPORARY_DATA_LOCATION_B), files);
 
 				for (final File fromfile : files) {
 
-					final String toname = fromfile.getAbsolutePath().substring(fromfile.getAbsolutePath().lastIndexOf(Strings.TEMPORARY_DATA_LOCATION_B) + Strings.TEMPORARY_DATA_LOCATION_B.length() + 1);
+					final String toname = fromfile.getAbsolutePath().substring(fromfile.getAbsolutePath().lastIndexOf(Strings.Common.TEMPORARY_DATA_LOCATION_B) + Strings.Common.TEMPORARY_DATA_LOCATION_B.length() + 1);
 	
 					final FileInputStream in = new FileInputStream(fromfile);
 	
@@ -804,21 +822,21 @@ public class Soartex_Patcher {
 			
 			if (shell.getMaximized()) {
 
-				prefsnode.putBoolean(Strings.PREF_MAX, true);
+				prefsnode.putBoolean(Strings.Common.PREF_MAX, true);
 
 			} else {
 
-				prefsnode.putInt(Strings.PREF_X, shell.getLocation().x);
-				prefsnode.putInt(Strings.PREF_Y, shell.getLocation().y);
+				prefsnode.putInt(Strings.Common.PREF_X, shell.getLocation().x);
+				prefsnode.putInt(Strings.Common.PREF_Y, shell.getLocation().y);
 				
-				prefsnode.putInt(Strings.PREF_WIDTH, shell.getSize().x);
-				prefsnode.putInt(Strings.PREF_HEIGHT, shell.getSize().y);
+				prefsnode.putInt(Strings.Common.PREF_WIDTH, shell.getSize().x);
+				prefsnode.putInt(Strings.Common.PREF_HEIGHT, shell.getSize().y);
 
-				prefsnode.putBoolean(Strings.PREF_MAX, false);
+				prefsnode.putBoolean(Strings.Common.PREF_MAX, false);
 
 			}
 			
-			prefsnode.put(Strings.PREF_LANG, language.toString());
+			prefsnode.put(Strings.Common.PREF_LANG, language.toString());
 			
 			event.doit = true;
 			
@@ -941,7 +959,7 @@ public class Soartex_Patcher {
 			
 			try {
 				
-				tabledata = new URL(Strings.MODDED_URL + Strings.MOD_CSV);
+				tabledata = new URL(Strings.Common.MODDED_URL + Strings.Common.MOD_CSV);
 				
 				moddatamap = new HashMap<>();
 				
@@ -951,7 +969,7 @@ public class Soartex_Patcher {
 				
 				while (readline != null) {
 					
-					final URL zipurl = new URL(Strings.MODDED_URL + readline.split(Strings.COMMA)[0].replace(Strings.SPACE, Strings.UNDERSCORE) + Strings.ZIP_FILES_EXT.substring(1));
+					final URL zipurl = new URL(Strings.Common.MODDED_URL + readline.split(Strings.Common.COMMA)[0].replace(Strings.Common.SPACE, Strings.Common.UNDERSCORE) + Strings.Common.ZIP_FILES_EXT.substring(1));
 					
 					try {
 						
@@ -969,21 +987,21 @@ public class Soartex_Patcher {
 					
 					final String[] itemtext = new String[4];
 					
-					itemtext[0] = readline.split(Strings.COMMA)[0];
+					itemtext[0] = readline.split(Strings.Common.COMMA)[0];
 					
 					System.out.println(itemtext[0]);
 					
-					itemtext[1] = readline.split(Strings.COMMA)[1];
+					itemtext[1] = readline.split(Strings.Common.COMMA)[1];
 					
 					final long size = zipurl.openConnection().getContentLengthLong();
 					
-					if (size > 1024) itemtext[2] = String.valueOf(size / 1024) + Strings.KILOBYTES;
+					if (size > 1024) itemtext[2] = String.valueOf(size / 1024) + Strings.Common.KILOBYTES;
 					
-					else if (size > 1024 * 1024) itemtext[2] = String.valueOf(size / (1024 * 1024)) + Strings.MEGABYTES;
+					else if (size > 1024 * 1024) itemtext[2] = String.valueOf(size / (1024 * 1024)) + Strings.Common.MEGABYTES;
 					
-					else itemtext[2] = String.valueOf(size) + Strings.BYTES;
+					else itemtext[2] = String.valueOf(size) + Strings.Common.BYTES;
 					
-					itemtext[3] = new SimpleDateFormat(Strings.DATE_FORMAT).format(new Date(zipurl.openConnection().getLastModified()));
+					itemtext[3] = new SimpleDateFormat(Strings.Common.DATE_FORMAT).format(new Date(zipurl.openConnection().getLastModified()));
 					
 					display.asyncExec(new Runnable() {
 						
