@@ -375,10 +375,6 @@ public class Soartex_Patcher {
 			if (!display.readAndDispatch()) display.sleep();
 
 		}
-
-		display.dispose();
-		
-		System.exit(0);
 		
 	}
 	
@@ -828,6 +824,10 @@ public class Soartex_Patcher {
 			
 			shell.dispose();
 			
+			display.dispose();
+			
+			System.exit(0);
+			
 		}
 		
 	}
@@ -910,11 +910,12 @@ public class Soartex_Patcher {
 			
 			final Shell parent = getParent();
 			
-			final Shell shell = new Shell(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
-			shell.setText(Strings.SOARTEX_PATCHER);
+			final Shell shell = new Shell(parent, SWT.DIALOG_TRIM & ~SWT.CLOSE);
+			shell.setText("Loading...");
 
 			final ProgressBar progress = new ProgressBar(shell, SWT.INDETERMINATE);
-			progress.pack();
+			progress.setSize(250, 50);
+			progress.setToolTipText("Please wait patiently while we compile the mods list.");
 			
 			shell.pack();
 			shell.open();
