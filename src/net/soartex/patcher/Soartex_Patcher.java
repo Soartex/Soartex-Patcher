@@ -34,6 +34,7 @@ import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 
 import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Dialog;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.FileDialog;
@@ -333,67 +334,9 @@ public class Soartex_Patcher {
 	
 	private static void loadTable () {
 		
-		try {
-			
-			tabledata = new URL(Strings.MODDED_URL + Strings.MOD_CSV);
-			
-			moddatamap = new HashMap<>();
-			
-			final BufferedReader in = new BufferedReader(new InputStreamReader(tabledata.openStream()));
-			
-			String readline = in.readLine();
-			
-			while (readline != null) {
-				
-				final URL zipurl = new URL(Strings.MODDED_URL + readline.split(Strings.COMMA)[0].replace(Strings.SPACE, Strings.UNDERSCORE) + Strings.ZIP_FILES_EXT.substring(1));
-				
-				try {
-					
-					zipurl.openStream();
-				
-				} catch (final IOException e) { 
-					
-					e.printStackTrace();
-					
-					readline = in.readLine();
-					
-					continue;
-				
-				}
-				
-				final TableItem item = new TableItem(table, SWT.NONE);
-				
-				final String[] itemtext = new String[4];
-				
-				itemtext[0] = readline.split(Strings.COMMA)[0];
-				
-				System.out.println(itemtext[0]);
-				
-				itemtext[1] = readline.split(Strings.COMMA)[1];
-				
-				final long size = zipurl.openConnection().getContentLengthLong();
-				
-				if (size > 1024) itemtext[2] = String.valueOf(size / 1024) + Strings.KILOBYTES;
-				
-				else if (size > 1024 * 1024) itemtext[2] = String.valueOf(size / (1024 * 1024)) + Strings.MEGABYTES;
-				
-				else itemtext[2] = String.valueOf(size) + Strings.BYTES;
-				
-				itemtext[3] = new SimpleDateFormat(Strings.DATE_FORMAT).format(new Date(zipurl.openConnection().getLastModified()));
-				
-			    item.setText(itemtext);
-				
-			    moddatamap.put(item, zipurl.toString());
-			    
-				readline = in.readLine();
-				
-			}
-			
-		} catch (final IOException e) {
-			
-			e.printStackTrace();
-			
-		}
+		final ProgressDialog progressDialog = new ProgressDialog(shell);
+		
+		progressDialog.open();
 		
 	}
 	
@@ -948,6 +891,138 @@ public class Soartex_Patcher {
 		}
 
 		@Override public void widgetDefaultSelected (final SelectionEvent e) {}
+		
+	}
+	
+	private static final class ProgressDialog extends Dialog {
+		
+		private static String readline = null;
+		
+		private static volatile boolean done = false;
+		
+		public ProgressDialog (final Shell parent) {
+			
+			super(parent);
+			
+		}
+
+		public void open () {
+			
+			final Shell parent = getParent();
+			
+			final Shell shell = new Shell(parent, SWT.DIALOG_TRIM | SWT.APPLICATION_MODAL);
+			shell.setText(Strings.SOARTEX_PATCHER);
+
+			final ProgressBar progress = new ProgressBar(shell, SWT.INDETERMINATE);
+			progress.pack();
+			
+			shell.pack();
+			shell.open();
+			final Display display = parent.getDisplay();
+			
+			new Thread(new Runnable() {
+				
+				@Override public void run () { loadTable(); }
+				
+			}).start();
+			
+			while (!shell.isDisposed() && !done) {
+				
+				if (!display.readAndDispatch()) display.sleep();
+				
+			}
+			
+			shell.dispose();
+			
+		}
+		
+		private static void loadTable () {
+			
+			try {
+				
+				tabledata = new URL(Strings.MODDED_URL + Strings.MOD_CSV);
+				
+				moddatamap = new HashMap<>();
+				
+				final BufferedReader in = new BufferedReader(new InputStreamReader(tabledata.openStream()));
+				
+				readline = in.readLine();
+				
+				while (readline != null) {
+					
+					final URL zipurl = new URL(Strings.MODDED_URL + readline.split(Strings.COMMA)[0].replace(Strings.SPACE, Strings.UNDERSCORE) + Strings.ZIP_FILES_EXT.substring(1));
+					
+					try {
+						
+						zipurl.openStream();
+					
+					} catch (final IOException e) { 
+						
+						e.printStackTrace();
+						
+						readline = in.readLine();
+						
+						continue;
+					
+					}
+					
+					final String[] itemtext = new String[4];
+					
+					itemtext[0] = readline.split(Strings.COMMA)[0];
+					
+					System.out.println(itemtext[0]);
+					
+					itemtext[1] = readline.split(Strings.COMMA)[1];
+					
+					final long size = zipurl.openConnection().getContentLengthLong();
+					
+					if (size > 1024) itemtext[2] = String.valueOf(size / 1024) + Strings.KILOBYTES;
+					
+					else if (size > 1024 * 1024) itemtext[2] = String.valueOf(size / (1024 * 1024)) + Strings.MEGABYTES;
+					
+					else itemtext[2] = String.valueOf(size) + Strings.BYTES;
+					
+					itemtext[3] = new SimpleDateFormat(Strings.DATE_FORMAT).format(new Date(zipurl.openConnection().getLastModified()));
+					
+					display.asyncExec(new Runnable() {
+						
+						@Override public void run () {
+							
+							try {
+								
+								if (readline == null) return;
+					
+								final TableItem item = new TableItem(table, SWT.NONE);
+								
+							    item.setText(itemtext);
+								
+							    moddatamap.put(item, zipurl.toString());
+							    
+								readline = in.readLine();
+							
+							} catch (final IOException e) {
+								
+								e.printStackTrace();
+								
+							}
+							
+						}
+					
+					});
+					
+				}
+				
+			} catch (final IOException e) {
+				
+				e.printStackTrace();
+				
+			} finally {
+				
+				done = true;
+				
+			}
+			
+		}
 		
 	}
 
