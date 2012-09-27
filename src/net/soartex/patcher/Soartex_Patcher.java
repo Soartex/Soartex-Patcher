@@ -62,7 +62,7 @@ public class Soartex_Patcher {
 	
 	private static Languages language = Languages.English;
 	
-	private static File texturepack;
+	private static File texturepack = null;
 	
 	// TODO: SWT Components
 	
@@ -140,9 +140,7 @@ public class Soartex_Patcher {
 		
 		shell.addListener(SWT.Close, new ExitListener());
 		
-		final GridLayout layout = new GridLayout(4, false);
-		layout.makeColumnsEqualWidth = true;
-		shell.setLayout(layout);
+		shell.setLayout(new GridLayout(4, true));
 		
 	}
 	
@@ -498,7 +496,7 @@ public class Soartex_Patcher {
 
 		@Override public void widgetSelected (final SelectionEvent e) {
 			
-			final FileDialog dialog = new FileDialog(shell, SWT.OPEN);
+			final FileDialog dialog = new FileDialog(shell, primary.getSelection() ? SWT.SAVE : SWT.OPEN);
 
 			dialog.setFilterNames(new String[] { getString(StringNames.ZIP_FILES) });
 			dialog.setFilterExtensions(new String[] { Strings.Common.ZIP_FILES_EXT });
@@ -515,6 +513,16 @@ public class Soartex_Patcher {
 				
 			}
 			
+			if (!primary.getSelection() && !texturepack.exists()) {
+				
+				path.setText("");
+				
+				texturepack = null;
+				
+				patch.setEnabled(false);
+				
+			}
+			
 		}
 
 		@Override public void widgetDefaultSelected (final SelectionEvent e) {}
@@ -527,6 +535,8 @@ public class Soartex_Patcher {
 		
 		private static boolean[] checked;
 		private static String[] moddata;
+		
+		private static boolean primary;
 		
 		@Override public void run () {
 			
@@ -542,9 +552,27 @@ public class Soartex_Patcher {
 			
 			updateProgress(25, 50);
 			
+			display.syncExec(new Runnable() {
+				
+				@Override public void run () {
+					
+					primary = Soartex_Patcher.primary.getSelection();
+					
+				}
+				
+			});
+			
+			if (primary) {
+				
+				downloadTexturePack();
+				
+			}
+			
+			updateProgress(50, 60);
+			
 			extractTexturePack();
 			
-			updateProgress(50, 75);
+			updateProgress(primary ? 60 : 50, 75);
 			
 			compressPatchedFiles();
 			
@@ -709,6 +737,40 @@ public class Soartex_Patcher {
 					
 			}
 			
+		}
+		
+		private static void downloadTexturePack () {
+			
+			final byte[] buffer = new byte[1048576];
+			
+			new File(Strings.Common.TEMPORARY_DATA_LOCATION_A).mkdirs();
+			new File(Strings.Common.TEMPORARY_DATA_LOCATION_A).deleteOnExit();
+			
+			try (InputStream in = new URL("http://www.soartex.net/Soartex%20Fanver.zip").openStream()) {
+				
+				final File destinationFile = texturepack.getAbsoluteFile();
+				destinationFile.getParentFile().mkdirs();
+				destinationFile.deleteOnExit();
+				destinationFile.getParentFile().deleteOnExit();
+				
+				final FileOutputStream out = new FileOutputStream(destinationFile);
+
+				int len;
+				
+				while ((len = in.read(buffer)) > -1) {
+
+					out.write(buffer, 0, len);
+
+				}
+
+				out.close();						
+				
+			} catch (final IOException e) {
+				
+				e.printStackTrace();
+				
+			}
+					
 		}
 		
 		private static void extractTexturePack () {
@@ -980,12 +1042,28 @@ public class Soartex_Patcher {
 			final Shell parent = getParent();
 			
 			final Shell shell = new Shell(parent, SWT.SHELL_TRIM);
+			
+			GridLayout layout = new GridLayout(1, false);
+			
+			layout.marginWidth = 0;
+			layout.marginHeight = 0;
+			
+			shell.setLayout(layout);
+			
 			shell.setText("Loading...");
 			shell.addListener(SWT.Close, new ExitListener());
 
 			final ProgressBar progress = new ProgressBar(shell, SWT.INDETERMINATE);
-			progress.setSize(250, 50);
 			progress.setToolTipText("Please wait patiently while we compile the mods list.");
+			
+			GridData gd = new GridData();
+		    gd.horizontalSpan = 4;
+			gd.grabExcessHorizontalSpace = true;
+			gd.grabExcessVerticalSpace = true;
+			gd.horizontalAlignment = SWT.FILL;
+			gd.verticalAlignment = SWT.FILL;
+			
+			progress.setLayoutData(gd);
 			
 			shell.pack();
 			shell.open();
