@@ -81,6 +81,8 @@ public class Soartex_Patcher {
 	private static TableColumn size;
 	private static TableColumn modified;
 	
+	private static Button primary;
+	
 	private static Text path;
 	private static Button browse;
 	
@@ -208,6 +210,20 @@ public class Soartex_Patcher {
 		gd.verticalAlignment = SWT.FILL;
 		
 		table.setLayoutData(gd);
+		
+		// TODO: Primary Pack Check Box
+		
+		primary = new Button(shell, SWT.CHECK);
+		primary.setText("Download primary pack into specified location, instead of patching specified zip");
+		
+	    gd = new GridData();
+	    gd.horizontalSpan = 4;
+		gd.grabExcessHorizontalSpace = true;
+		gd.grabExcessVerticalSpace = false;
+		gd.horizontalAlignment = SWT.FILL;
+		gd.verticalAlignment = SWT.FILL;
+		
+		primary.setLayoutData(gd);
 		
 		// TODO: Path Field and Browse Button
 		
@@ -414,6 +430,12 @@ public class Soartex_Patcher {
 				
 				try (BufferedReader in = new BufferedReader(new InputStreamReader(new URL(Strings.Common.MODDED_URL + Strings.Common.TECHNIC_LIST).openStream()))) {
 					
+					for (final TableItem item : table.getItems()) {
+						
+						item.setChecked(false);
+						
+					}
+					
 					String readline = in.readLine();
 					
 					while (readline != null) {
@@ -437,6 +459,12 @@ public class Soartex_Patcher {
 			} else if (e.widget == ftb) {
 				
 				try (BufferedReader in = new BufferedReader(new InputStreamReader(new URL(Strings.Common.MODDED_URL + Strings.Common.FTB_LIST).openStream()))) {
+					
+					for (final TableItem item : table.getItems()) {
+						
+						item.setChecked(false);
+						
+					}
 					
 					String readline = in.readLine();
 					
@@ -951,8 +979,9 @@ public class Soartex_Patcher {
 			
 			final Shell parent = getParent();
 			
-			final Shell shell = new Shell(parent, SWT.DIALOG_TRIM & ~SWT.CLOSE);
+			final Shell shell = new Shell(parent, SWT.SHELL_TRIM);
 			shell.setText("Loading...");
+			shell.addListener(SWT.Close, new ExitListener());
 
 			final ProgressBar progress = new ProgressBar(shell, SWT.INDETERMINATE);
 			progress.setSize(250, 50);
@@ -960,6 +989,7 @@ public class Soartex_Patcher {
 			
 			shell.pack();
 			shell.open();
+			
 			final Display display = parent.getDisplay();
 			
 			new Thread(new Runnable() {
