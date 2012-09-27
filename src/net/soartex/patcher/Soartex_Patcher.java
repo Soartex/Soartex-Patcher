@@ -1031,6 +1031,11 @@ public class Soartex_Patcher {
 		
 		private static volatile boolean done = false;
 		
+		public static Text info1;
+		public static Text info2;
+		
+		private static int tempCount;
+		
 		public ProgressDialog (final Shell parent) {
 			
 			super(parent);
@@ -1052,7 +1057,19 @@ public class Soartex_Patcher {
 			
 			shell.setText("Loading...");
 			shell.addListener(SWT.Close, new ExitListener());
+			
+			info1 = new Text(shell, SWT.READ_ONLY | SWT.BORDER);
+			info1.setText(tempCount+": Mods Loaded");
+			info2 = new Text(shell, SWT.READ_ONLY | SWT.BORDER);
 
+			GridData ugd = new GridData();
+			ugd.verticalSpan = 5;
+			ugd.horizontalAlignment = SWT.FILL;
+			ugd.verticalAlignment = SWT.FILL;
+			
+			info1.setLayoutData(ugd);
+			info2.setLayoutData(ugd);
+			
 			final ProgressBar progress = new ProgressBar(shell, SWT.INDETERMINATE);
 			progress.setToolTipText("Please wait patiently while we compile the mods list.");
 			
@@ -1085,7 +1102,7 @@ public class Soartex_Patcher {
 			shell.dispose();
 			
 		}
-		
+			
 		private static void loadTable () {
 			
 			try {
@@ -1121,14 +1138,32 @@ public class Soartex_Patcher {
 					final String[] itemtext = new String[4];
 					
 					itemtext[0] = readline.split(Strings.Common.COMMA)[0];
+					//
+					display.asyncExec(new Runnable() {
+						
+						@Override public void run () {
+							
+							try {
+								info1.setText(tempCount+": Mods Loaded");
+								info2.setText(readline.split(Strings.Common.COMMA)[0]);
+								tempCount++;
+							} catch (Exception e) {
+								
+								e.printStackTrace();
+								
+							}
+							
+						}
 					
+					});					
+					//
 					System.out.println(itemtext[0]);
 					
 					itemtext[1] = readline.split(Strings.Common.COMMA)[1];
 					
 					final long size = zipurl.openConnection().getContentLengthLong();
 					
-					if (size > 1024) itemtext[2] = String.valueOf(size / 1024) + Strings.Common.KILOBYTES;
+					if (size > 1024 && size < 1024 * 1024 ) itemtext[2] = String.valueOf(size / 1024) + Strings.Common.KILOBYTES;
 					
 					else if (size > 1024 * 1024) itemtext[2] = String.valueOf(size / (1024 * 1024)) + Strings.Common.MEGABYTES;
 					
