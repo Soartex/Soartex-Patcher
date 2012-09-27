@@ -938,20 +938,24 @@ public class Soartex_Patcher {
 
 		@Override public void handleEvent (final Event event) {
 			
-			if (shell.getMaximized()) {
-
-				prefsnode.putBoolean(Strings.Common.PREF_MAX, true);
-
-			} else {
-
-				prefsnode.putInt(Strings.Common.PREF_X, shell.getLocation().x);
-				prefsnode.putInt(Strings.Common.PREF_Y, shell.getLocation().y);
-				
-				prefsnode.putInt(Strings.Common.PREF_WIDTH, shell.getSize().x);
-				prefsnode.putInt(Strings.Common.PREF_HEIGHT, shell.getSize().y);
-
-				prefsnode.putBoolean(Strings.Common.PREF_MAX, false);
-
+			if (!shell.isDisposed()) {
+			
+				if (shell.getMaximized()) {
+	
+					prefsnode.putBoolean(Strings.Common.PREF_MAX, true);
+	
+				} else {
+	
+					prefsnode.putInt(Strings.Common.PREF_X, shell.getLocation().x);
+					prefsnode.putInt(Strings.Common.PREF_Y, shell.getLocation().y);
+					
+					prefsnode.putInt(Strings.Common.PREF_WIDTH, shell.getSize().x);
+					prefsnode.putInt(Strings.Common.PREF_HEIGHT, shell.getSize().y);
+	
+					prefsnode.putBoolean(Strings.Common.PREF_MAX, false);
+	
+				}
+			
 			}
 			
 			prefsnode.put(Strings.Common.PREF_LANG, language.toString());
@@ -1021,6 +1025,7 @@ public class Soartex_Patcher {
 			
 			name.pack();
 			version.pack();
+			gameversion.pack();
 			size.pack();
 			modified.pack();
 			
@@ -1051,32 +1056,21 @@ public class Soartex_Patcher {
 			
 			final Shell parent = getParent();
 			
-			final Shell shell = new Shell(parent, SWT.SHELL_TRIM);
+			final Shell shell = new Shell(parent, SWT.DIALOG_TRIM);
 			
-			GridLayout layout = new GridLayout(1, false);
-			
-			layout.marginWidth = 0;
-			layout.marginHeight = 0;
-			
-			shell.setLayout(layout);
+			shell.setLayout(new GridLayout(1, false));
 			
 			shell.setText("Loading...");
 			shell.addListener(SWT.Close, new ExitListener());
 			
-			info1 = new Label(shell, SWT.BORDER);
-			info1.setText(tempCount + ": Mods Loaded");
-			info2 = new Label(shell, SWT.BORDER);
-
 			GridData gd = new GridData();
-			gd.verticalSpan = 5;
 			gd.horizontalAlignment = SWT.FILL;
 			gd.verticalAlignment = SWT.FILL;
 			
-			info1.setLayoutData(gd);
-			info2.setLayoutData(gd);
+			final Label message = new Label(shell, SWT.NONE);
+			message.setText("Please wait patiently while we compile the mods list");
 			
 			final ProgressBar progress = new ProgressBar(shell, SWT.INDETERMINATE);
-			progress.setToolTipText("Please wait patiently while we compile the mods list.");
 			
 			gd = new GridData();
 		    gd.horizontalSpan = 4;
@@ -1087,6 +1081,17 @@ public class Soartex_Patcher {
 			
 			progress.setLayoutData(gd);
 			
+			info1 = new Label(shell, SWT.NONE);
+			info1.setText(tempCount + " mods loaded");
+			info2 = new Label(shell, SWT.NONE);
+
+			gd = new GridData();
+			gd.horizontalAlignment = SWT.FILL;
+			gd.verticalAlignment = SWT.FILL;
+			
+			info1.setLayoutData(gd);
+			info2.setLayoutData(gd);
+
 			shell.pack();
 			shell.open();
 			
@@ -1144,37 +1149,11 @@ public class Soartex_Patcher {
 					
 					itemtext[0] = readline.split(Strings.Common.COMMA)[0];
 					
-					display.asyncExec(new Runnable() {
-						
-						@Override public void run () {
-							
-							try {
-								
-							} catch (Exception e) {
-								
-								e.printStackTrace();
-								
-							}
-							
-						}
-					
-					});					
-					
 					System.out.println(itemtext[0]);
 					
-					try{
-						itemtext[1] = readline.split(Strings.Common.COMMA)[1];
-					}
-					catch(Exception r){
-						itemtext[1] = "Unknown";
-					}
-					try{
-						itemtext[2] = readline.split(Strings.Common.COMMA)[2];
-					}
-					catch(Exception r){
-						itemtext[2] = "Unknown";
-					}
-					
+					itemtext[1] = readline.split(Strings.Common.COMMA)[1];
+						
+					itemtext[2] = ""; //readline.split(Strings.Common.COMMA)[2];
 					
 					final long size = zipurl.openConnection().getContentLengthLong();
 					
@@ -1200,13 +1179,11 @@ public class Soartex_Patcher {
 								
 							    moddatamap.put(item, zipurl.toString());
 							    
-							    info1.setText(tempCount+": Mods Loaded");
-								info2.setText(readline.split(Strings.Common.COMMA)[0]);
-								tempCount++;
-							    
+							    info1.setText(tempCount++ + " mods loaded");
+								info2.setText("Loading: " + readline.split(Strings.Common.COMMA)[0]);
+								
 								readline = in.readLine();
 								
-							
 							} catch (final IOException e) {
 								
 								e.printStackTrace();
