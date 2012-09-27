@@ -1124,7 +1124,7 @@ public class Soartex_Patcher {
 					
 					final URL zipurl = new URL(Strings.Common.MODDED_URL + readline.split(Strings.Common.COMMA)[0].replace(Strings.Common.SPACE, Strings.Common.UNDERSCORE) + Strings.Common.ZIP_FILES_EXT.substring(1));
 					
-					/*try {
+					try {
 						
 						zipurl.openStream();
 					
@@ -1136,7 +1136,7 @@ public class Soartex_Patcher {
 						
 						continue;
 					
-					}*/
+					}
 					
 					if (readline == null) return;
 					
