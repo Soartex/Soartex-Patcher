@@ -78,6 +78,7 @@ public class Soartex_Patcher {
 	
 	private static TableColumn name;
 	private static TableColumn version;
+	private static TableColumn gameversion;
 	private static TableColumn size;
 	private static TableColumn modified;
 	
@@ -183,11 +184,13 @@ public class Soartex_Patcher {
 	    
 	    name = new TableColumn(table, SWT.CENTER);
 	    version = new TableColumn(table, SWT.CENTER);
+	    gameversion = new TableColumn(table, SWT.CENTER);
 	    size = new TableColumn(table, SWT.CENTER);
 	    modified = new TableColumn(table, SWT.CENTER);
 	    
 	    name.setText(getString(StringNames.NAME_COLUMN));
 	    version.setText(getString(StringNames.VERSION_COLUMN));
+	    gameversion.setText(getString(StringNames.GAMEVERSION_COLUMN));
 	    size.setText(getString(StringNames.SIZE_COLUMN));
 	    modified.setText(getString(StringNames.MODIFIED_COLUMN));
 	    
@@ -196,6 +199,7 @@ public class Soartex_Patcher {
 	    loadTable();
 	    
 	    name.pack();
+	    gameversion.pack();
 	    version.pack();
 	    size.pack();
 	    modified.pack();
@@ -1119,7 +1123,7 @@ public class Soartex_Patcher {
 					
 					final URL zipurl = new URL(Strings.Common.MODDED_URL + readline.split(Strings.Common.COMMA)[0].replace(Strings.Common.SPACE, Strings.Common.UNDERSCORE) + Strings.Common.ZIP_FILES_EXT.substring(1));
 					
-					try {
+					/*try {
 						
 						zipurl.openStream();
 					
@@ -1131,11 +1135,11 @@ public class Soartex_Patcher {
 						
 						continue;
 					
-					}
+					}*/
 					
 					if (readline == null) return;
 					
-					final String[] itemtext = new String[4];
+					final String[] itemtext = new String[5];
 					
 					itemtext[0] = readline.split(Strings.Common.COMMA)[0];
 					//
@@ -1159,17 +1163,29 @@ public class Soartex_Patcher {
 					//
 					System.out.println(itemtext[0]);
 					
-					itemtext[1] = readline.split(Strings.Common.COMMA)[1];
+					try{
+						itemtext[1] = readline.split(Strings.Common.COMMA)[1];
+					}
+					catch(Exception r){
+						itemtext[1] = "Unknown";
+					}
+					try{
+						itemtext[2] = readline.split(Strings.Common.COMMA)[2];
+					}
+					catch(Exception r){
+						itemtext[2] = "Unknown";
+					}
+					
 					
 					final long size = zipurl.openConnection().getContentLengthLong();
 					
-					if (size > 1024 && size < 1024 * 1024 ) itemtext[2] = String.valueOf(size / 1024) + Strings.Common.KILOBYTES;
+					if (size > 1024 && size < 1024 * 1024 ) itemtext[3] = String.valueOf(size / 1024) + Strings.Common.KILOBYTES;
 					
-					else if (size > 1024 * 1024) itemtext[2] = String.valueOf(size / (1024 * 1024)) + Strings.Common.MEGABYTES;
+					else if (size > 1024 * 1024) itemtext[3] = String.valueOf(size / (1024 * 1024)) + Strings.Common.MEGABYTES;
 					
-					else itemtext[2] = String.valueOf(size) + Strings.Common.BYTES;
+					else itemtext[3] = String.valueOf(size) + Strings.Common.BYTES;
 					
-					itemtext[3] = new SimpleDateFormat(Strings.Common.DATE_FORMAT).format(new Date(zipurl.openConnection().getLastModified()));
+					itemtext[4] = new SimpleDateFormat(Strings.Common.DATE_FORMAT).format(new Date(zipurl.openConnection().getLastModified()));
 					
 					display.asyncExec(new Runnable() {
 						
