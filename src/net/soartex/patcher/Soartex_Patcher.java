@@ -493,107 +493,56 @@ public class Soartex_Patcher {
 		
 	}
 	
-	private static final class PatchListener implements SelectionListener {
-
-		@Override public void widgetSelected (final SelectionEvent e) {
+	private static final class PatchListener implements SelectionListener, Runnable {
+		
+		private static int count = 0;
+		
+		private static boolean[] checked;
+		private static String[] moddata;
+		
+		@Override public void run () {
 			
-			technic.setEnabled(false);
-			//ftb.setEnabled(false);
-			all.setEnabled(false);
-			none.setEnabled(false);
-			table.setEnabled(false);
-			path.setEnabled(false);
-			browse.setEnabled(false);
-			patch.setEnabled(false);
+			setAll(false);
 			
-			progress.setSelection(0);
+			updateProgress(0, 0);
 			
 			downloadModTextures();
 			
-			for (int i = 0 ; i < 25 ; i++) {
-				
-				progress.setSelection(i);
-				
-				try { TimeUnit.MILLISECONDS.sleep(5); } catch (final InterruptedException e1) {}
-				
-			}
-			
-			progress.setSelection(25);
+			updateProgress(0, 25);
 			
 			extractModTextures();
 			
-			for (int i = 25 ; i < 50 ; i++) {
-				
-				progress.setSelection(i);
-				
-				try { TimeUnit.MILLISECONDS.sleep(5); } catch (final InterruptedException e1) {}
-				
-			}
-			
-			progress.setSelection(50);
+			updateProgress(25, 50);
 			
 			extractTexturePack();
 			
-			for (int i = 50 ; i < 75 ; i++) {
-				
-				progress.setSelection(i);
-				
-				try { TimeUnit.MILLISECONDS.sleep(5); } catch (final InterruptedException e1) {}
-				
-			}
-			
-			progress.setSelection(75);
+			updateProgress(50, 75);
 			
 			compressPatchedFiles();
 			
-			for (int i = 75 ; i < 100 ; i++) {
+			updateProgress(75, 100);
+			
+			setAll(true);
+			
+			try {
 				
-				progress.setSelection(i);
+				TimeUnit.SECONDS.sleep(2);
 				
-				try { TimeUnit.MILLISECONDS.sleep(5); } catch (final InterruptedException e1) {}
+			} catch (final InterruptedException e) {
+				
+				e.printStackTrace();
+				
+			} finally {
+				
+				updateProgress(0, 0);
 				
 			}
-			
-			progress.setSelection(100);
-			
-			technic.setEnabled(true);
-			//ftb.setEnabled(true);
-			all.setEnabled(true);
-			none.setEnabled(true);
-			table.setEnabled(true);
-			path.setEnabled(true);
-			browse.setEnabled(true);
-			patch.setEnabled(true);
-			
-			new Thread(new Runnable() {
-				
-				@Override public void run () {
 					
-					try {
-						
-						TimeUnit.SECONDS.sleep(3);
-						
-					} catch (final InterruptedException e) {
-						
-						e.printStackTrace();
-						
-					} finally {
-						
-						display.asyncExec(new Runnable() {
-							
-							@Override public void run () {
-								
-								progress.setSelection(0);
-								
-							}
-							
-						});
-						
-					}
-					
-				}
-				
-			}).start();
+		}
+		
+		@Override public void widgetSelected (final SelectionEvent e) {
+			
+			new Thread(this).start();
 			
 		}
 
@@ -606,13 +555,44 @@ public class Soartex_Patcher {
 			new File(Strings.Common.TEMPORARY_DATA_LOCATION_A).mkdirs();
 			new File(Strings.Common.TEMPORARY_DATA_LOCATION_A).deleteOnExit();
 			
-			for (final TableItem item : table.getItems()) {
+			display.syncExec(new Runnable() {
 				
-				if (item.getChecked()) {
+				@Override public void run () {
 					
-					try (InputStream in = new URL(moddatamap.get(item)).openStream()) {
+					checked = new boolean[table.getItems().length];
+					moddata = new String[table.getItems().length];
+			
+					for (final TableItem item : table.getItems()) {
 						
-						final File destinationFile = new File(Strings.Common.TEMPORARY_DATA_LOCATION_A + File.separator + new File(moddatamap.get(item)).getName()).getAbsoluteFile();
+						checked[count++] = item.getChecked();
+						
+					}
+					
+					count = 0;
+					
+					for (final TableItem item : table.getItems()) {
+						
+						System.out.println(moddatamap.get(item));
+						
+						moddata[count++] = moddatamap.get(item);
+						
+					}
+				
+				}
+			
+			});
+			
+			count = 0;
+			
+			for (final boolean ischecked: checked) {
+				
+				if (ischecked) {
+					
+					System.out.println(moddata[count]);
+					
+					try (InputStream in = new URL(moddata[count]).openStream()) {
+						
+						final File destinationFile = new File(Strings.Common.TEMPORARY_DATA_LOCATION_A + File.separator + new File(moddata[count]).getName()).getAbsoluteFile();
 						destinationFile.getParentFile().mkdirs();
 						destinationFile.deleteOnExit();
 						destinationFile.getParentFile().deleteOnExit();
@@ -636,6 +616,8 @@ public class Soartex_Patcher {
 					}
 					
 				}
+				
+				count++;
 				
 			}
 			
@@ -705,7 +687,7 @@ public class Soartex_Patcher {
 			
 			final byte[] buffer = new byte[1048576];
 			
-			try (ZipInputStream in = new ZipInputStream(new FileInputStream(texturepack));) {
+			try (ZipInputStream in = new ZipInputStream(new FileInputStream(texturepack))) {
 				
 				ZipEntry zipentry = in.getNextEntry();
 				
@@ -804,13 +786,54 @@ public class Soartex_Patcher {
 			
 			for (final File file : afiles) {
 				
-				System.out.println(f.getAbsolutePath());
-
 				if (file.isDirectory()) getFiles(file, files);
 
 				else files.add(file.getAbsoluteFile());
 
 			}
+			
+		}
+		
+		private static void setAll (final boolean b) {
+			
+			display.asyncExec(new Runnable() {
+				
+				@Override public void run () {
+					
+					technic.setEnabled(b);
+					//ftb.setEnabled(b);
+					all.setEnabled(b);
+					none.setEnabled(b);
+					path.setEnabled(b);
+					browse.setEnabled(b);
+					patch.setEnabled(b);
+					table.setEnabled(b);
+					
+				}
+				
+			});
+			
+		}
+		
+		private static void updateProgress (final int from, final int to) {
+			
+			display.asyncExec(new Runnable() {
+				
+				@Override public void run () {
+					
+					for (int i = from ; i < to ; i++) {
+						
+						progress.setSelection(i);
+						
+						try { TimeUnit.MILLISECONDS.sleep(5); } catch (final InterruptedException e1) {}
+						
+					}
+					
+					progress.setSelection(to);
+					
+				}
+				
+			});
 			
 		}
 		
@@ -984,6 +1007,8 @@ public class Soartex_Patcher {
 						continue;
 					
 					}
+					
+					if (readline == null) return;
 					
 					final String[] itemtext = new String[4];
 					
