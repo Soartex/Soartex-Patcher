@@ -633,8 +633,6 @@ public class Soartex_Patcher {
 					
 					for (final TableItem item : table.getItems()) {
 						
-						System.out.println(moddatamap.get(item));
-						
 						moddata[count++] = moddatamap.get(item);
 						
 					}
@@ -648,8 +646,6 @@ public class Soartex_Patcher {
 			for (final boolean ischecked: checked) {
 				
 				if (ischecked) {
-					
-					System.out.println(moddata[count]);
 					
 					try (InputStream in = new URL(moddata[count]).openStream()) {
 						
@@ -743,6 +739,8 @@ public class Soartex_Patcher {
 				}
 					
 			}
+			
+			delete(new File(Strings.Common.TEMPORARY_DATA_LOCATION_A));
 			
 		}
 		
@@ -871,6 +869,8 @@ public class Soartex_Patcher {
 				
 			}
 			
+			delete(new File(Strings.Common.TEMPORARY_DATA_LOCATION_B));
+			
 		}
 
 		private static void getFiles (final File f, final ArrayList<File> files) {
@@ -886,6 +886,28 @@ public class Soartex_Patcher {
 				if (file.isDirectory()) getFiles(file, files);
 
 				else files.add(file.getAbsoluteFile());
+
+			}
+			
+		}
+		
+		private static void delete (final File f) {
+
+			System.out.println("DELETE");
+			
+			f.delete();
+			
+			if (f.isFile()) return;
+
+			final File[] files = f.getAbsoluteFile().listFiles();
+
+			if (files == null) return;
+			
+			for (final File file : files) {
+				
+				delete(file);
+				
+				f.delete();
 
 			}
 			
@@ -933,7 +955,7 @@ public class Soartex_Patcher {
 			});
 			
 		}
-		
+
 	}
 	
 	private static final class ExitListener implements Listener {
