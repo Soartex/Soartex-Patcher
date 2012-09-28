@@ -1007,6 +1007,12 @@ public class Soartex_Patcher {
 			name.setText(getString(StringNames.NAME_COLUMN));
 			size.setText(getString(StringNames.SIZE_COLUMN));
 			
+			name.pack();
+			version.pack();
+			gameversion.pack();
+			size.pack();
+			modified.pack();
+			
 			patch.setText(getString(StringNames.PATCH_BUTTON));
 			
 			languageitem.setText(getString(StringNames.LANGUAGE_ITEM));
@@ -1022,12 +1028,6 @@ public class Soartex_Patcher {
 			japaneseitem.setText(getString(StringNames.JAPANESE_ITEM));
 			
 			helpitem.setText(getString(StringNames.HELP_ITEM));
-			
-			name.pack();
-			version.pack();
-			gameversion.pack();
-			size.pack();
-			modified.pack();
 			
 		}
 
