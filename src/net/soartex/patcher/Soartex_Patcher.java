@@ -1153,7 +1153,7 @@ public class Soartex_Patcher {
 					
 					itemtext[1] = readline.split(Strings.Common.COMMA)[1];
 						
-					itemtext[2] = ""; //readline.split(Strings.Common.COMMA)[2];
+					itemtext[2] = readline.split(Strings.Common.COMMA)[2];
 					
 					final long size = zipurl.openConnection().getContentLengthLong();
 					
