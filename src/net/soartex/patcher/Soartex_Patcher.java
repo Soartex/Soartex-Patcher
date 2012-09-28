@@ -682,6 +682,8 @@ public class Soartex_Patcher {
 				
 			}
 			
+			count = 0;
+			
 		}
 		
 		private static void extractModTextures () {
