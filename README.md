@@ -14,4 +14,4 @@ To use this project clone the repository and download the SWT jar for your platf
 
 This project will check for the sources for the SWT Jar in a folder called 'src' under 'lib'. Get them yourself for your own platform, the folder is ignored for obvious legal purposes.
 
-__This project uses Java SE 1.7 (Update 7). If you still use Java 6, please update. That is stupid. If you are on Mac, please go to java.com and get the latest Java SE 7.07. If you are on Mac OS 10.6 or lower, you should upgrade to Lion or Mountain Lion.__
+__This project uses Java SE 1.7 (Update 7). If you still use Java 6, please update, for Java 6 is old and outdated. If you are on Mac, please go to java.com and get the latest Java SE 7.07. If you are on Mac OS 10.6 or lower, you should upgrade to Lion or Mountain Lion.__
