@@ -32,9 +32,9 @@ class Strings {
 		
 		static final String OS = System.getProperty("os.name").toUpperCase();
 		
-		static final String ICON_NAME = "icon.png";
+		static final String ICON_NAME = "icon.ico";
 		
-		static final String MODDED_URL = "ftp://modded:1a2b3c4d5e@soartex.net/modded/";
+		static final String MODDED_URL = "http://www.soartex.net/modded/";
 		
 		static final String MOD_CSV = "mods.csv";
 		static final String TECHNIC_LIST = "technic.txt";
