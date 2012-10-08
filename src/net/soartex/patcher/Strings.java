@@ -34,7 +34,8 @@ class Strings {
 		
 		static final String ICON_NAME = "icon.ico";
 		
-		static final String MODDED_URL = "http://www.soartex.net/modded/";
+		//static final String MODDED_URL = "ftp://patcher%40soartex.net:Password@ftp.soartex.net/";
+		static final String MODDED_URL = "http://soartex.net/modded/";
 		
 		static final String MOD_CSV = "mods.csv";
 		static final String TECHNIC_LIST = "technic.txt";

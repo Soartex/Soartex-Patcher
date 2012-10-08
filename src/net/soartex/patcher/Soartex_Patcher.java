@@ -892,8 +892,6 @@ public class Soartex_Patcher {
 		}
 		
 		private static void delete (final File f) {
-
-			System.out.println("DELETE");
 			
 			f.delete();
 			
@@ -1175,9 +1173,17 @@ public class Soartex_Patcher {
 					
 					System.out.println(itemtext[0]);
 					
+					try{
 					itemtext[1] = readline.split(Strings.Common.COMMA)[1];
+					}catch(Exception e){
+						itemtext[1] = "Unknown";
+					}
 						
+					try{
 					itemtext[2] = readline.split(Strings.Common.COMMA)[2];
+					}catch(Exception e){
+						itemtext[2] = "Unknown";
+					}
 					
 					final long size = zipurl.openConnection().getContentLengthLong();
 					
