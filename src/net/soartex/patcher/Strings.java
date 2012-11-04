@@ -25,7 +25,6 @@ class Strings {
 	}
 	
 	static final class Common {
-		
 		// TODO: Important Strings
 		
 		static final String SOARTEX_PATCHER = "Soartex Patcher";
@@ -34,7 +33,6 @@ class Strings {
 		
 		static final String ICON_NAME = "icon.ico";
 		
-		//static final String MODDED_URL = "ftp://patcher%40soartex.net:Password@ftp.soartex.net/";
 		static final String MODDED_URL = "http://soartex.net/modded/";
 		
 		static final String MOD_CSV = "mods.csv";
