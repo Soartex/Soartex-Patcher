@@ -47,19 +47,21 @@ public class UnZip
 				}
 				else
 				{
-					FileOutputStream fos = null;
-
-					new File(newFile.getParent()).mkdirs();
-
-					fos = new FileOutputStream(newFile);             
-
-					int len;
-					while ((len = zis.read(buffer)) > 0) 
-					{
-						fos.write(buffer, 0, len);
+					try{
+						FileOutputStream fos = null;
+						new File(newFile.getParent()).mkdirs();
+						
+						//this line usally errors
+						fos = new FileOutputStream(newFile);             
+						int len;
+						while ((len = zis.read(buffer)) > 0){
+							fos.write(buffer, 0, len);
+						}
+						fos.close();   
 					}
-
-					fos.close();   
+					catch(Exception e){
+						e.printStackTrace(); 
+					}
 				}
 				ze = zis.getNextEntry();
 			}
