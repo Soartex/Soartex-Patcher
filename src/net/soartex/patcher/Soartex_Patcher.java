@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.PrintStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,6 +16,11 @@ import java.util.concurrent.TimeUnit;
 
 import java.util.prefs.Preferences;
 
+import javax.swing.JFrame;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+
+import net.soartex.patcher.console.TextAreaOutputStream;
 import net.soartex.patcher.helpers.AppZip;
 import net.soartex.patcher.helpers.UnZip;
 import net.soartex.patcher.listeners.PrimaryListener;
@@ -62,6 +68,7 @@ public class Soartex_Patcher {
 
 	private static Display display;
 	private static Shell shell;
+	private static JFrame frame;
 
 	private static Button technic;
 	private static Button ftb;
@@ -91,6 +98,8 @@ public class Soartex_Patcher {
 
 	public static void main (final String[] args) {
 
+		initializeLogger();
+		
 		initializeShell();
 
 		initializeComponents();
@@ -98,12 +107,25 @@ public class Soartex_Patcher {
 		loadIcon();
 
 		startEventLoop();
-
 	}
-
+	
+	private static void initializeLogger() {
+		frame = new JFrame();        
+        //size of console
+        JTextArea ta = new JTextArea("", 10, 80);
+        
+        PrintStream ps = new PrintStream(new TextAreaOutputStream(ta));
+        System.setOut(ps);
+        System.setErr(ps);
+        frame.add(new JScrollPane(ta));
+        frame.setFocusableWindowState(false);
+        frame.pack();
+        frame.setTitle("Soartex Patcher Console");
+        frame.setVisible(true);
+        frame.setFocusableWindowState(true);
+	}
+	
 	private static void initializeShell () {
-
-
 		display = Display.getDefault();
 
 		shell = new Shell(display);
@@ -256,7 +278,6 @@ public class Soartex_Patcher {
 
 	}
 
-
 	private static void loadTable () {
 		final ProgressDialog progressDialog = new ProgressDialog(shell);
 		progressDialog.open();
@@ -314,7 +335,7 @@ public class Soartex_Patcher {
 			if (!display.readAndDispatch()) display.sleep();
 
 		}
-
+		frame.dispose();
 	}
 
 	public static String getString (final StringNames name) {
