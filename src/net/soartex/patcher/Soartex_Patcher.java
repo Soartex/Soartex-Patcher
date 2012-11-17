@@ -8,7 +8,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+
 import java.net.URL;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -21,13 +23,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 import net.soartex.patcher.console.TextAreaOutputStream;
+
 import net.soartex.patcher.helpers.AppZip;
 import net.soartex.patcher.helpers.UnZip;
+
 import net.soartex.patcher.listeners.PrimaryListener;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.SWTException;
-
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.events.SelectionListener;
 
@@ -99,7 +101,7 @@ public class Soartex_Patcher {
 	public static void main (final String[] args) {
 
 		initializeLogger();
-		
+
 		initializeShell();
 
 		initializeComponents();
@@ -108,23 +110,23 @@ public class Soartex_Patcher {
 
 		startEventLoop();
 	}
-	
+
 	private static void initializeLogger() {
-		frame = new JFrame();        
-        //size of console
-        JTextArea ta = new JTextArea("", 10, 80);
-        
-        PrintStream ps = new PrintStream(new TextAreaOutputStream(ta));
-        System.setOut(ps);
-        System.setErr(ps);
-        frame.add(new JScrollPane(ta));
-        frame.setFocusableWindowState(false);
-        frame.pack();
-        frame.setTitle("Soartex Patcher Console");
-        frame.setVisible(true);
-        frame.setFocusableWindowState(true);
+		frame = new JFrame();
+		//size of console
+		final JTextArea ta = new JTextArea("", 10, 80);
+
+		final PrintStream ps = new PrintStream(new TextAreaOutputStream(ta));
+		System.setOut(ps);
+		System.setErr(ps);
+		frame.add(new JScrollPane(ta));
+		frame.setFocusableWindowState(false);
+		frame.pack();
+		frame.setTitle("Soartex Patcher Console");
+		frame.setVisible(true);
+		frame.setFocusableWindowState(true);
 	}
-	
+
 	private static void initializeShell () {
 		display = Display.getDefault();
 
@@ -308,7 +310,7 @@ public class Soartex_Patcher {
 
 			shell.setImage(i);
 
-		} catch (final SWTException | IllegalArgumentException e) {
+		} catch (final Exception e) {
 
 			try {
 
@@ -320,7 +322,7 @@ public class Soartex_Patcher {
 
 				in.close();
 
-			} catch (final IOException | SWTException | IllegalArgumentException e1) {}
+			} catch (final Exception e1) {}
 
 		}
 
@@ -370,7 +372,9 @@ public class Soartex_Patcher {
 
 			} else if (e.widget == technic) {
 
-				try (BufferedReader in = new BufferedReader(new InputStreamReader(new URL(Strings.Common.MODDED_URL + Strings.Common.TECHNIC_LIST).openStream()))) {
+				try {
+
+					final BufferedReader in = new BufferedReader(new InputStreamReader(new URL(Strings.Common.MODDED_URL + Strings.Common.TECHNIC_LIST).openStream()));
 
 					for (final TableItem item : table.getItems()) {
 
@@ -400,7 +404,9 @@ public class Soartex_Patcher {
 
 			} else if (e.widget == ftb) {
 
-				try (BufferedReader in = new BufferedReader(new InputStreamReader(new URL(Strings.Common.MODDED_URL + Strings.Common.FTB_LIST).openStream()))) {
+				try {
+
+					final BufferedReader in = new BufferedReader(new InputStreamReader(new URL(Strings.Common.MODDED_URL + Strings.Common.FTB_LIST).openStream()));
 
 					for (final TableItem item : table.getItems()) {
 
@@ -486,7 +492,7 @@ public class Soartex_Patcher {
 		@Override public void run () {
 			new Thread(new Runnable() {
 
-				@Override public void run () { 
+				@Override public void run () {
 					setAll(false);
 					updateProgress(0, 10);
 
@@ -517,29 +523,29 @@ public class Soartex_Patcher {
 					}*/
 
 					updateProgress(25, 35);
-					
-					
+
+
 					System.out.println("==================");
 					System.out.println("Extracting Main Zip");
 					System.out.println("==================");
 					extractTexturePack();
-					
+
 					updateProgress(35, 60);
 
 					System.out.println("==================");
 					System.out.println("Extracting Mods");
 					System.out.println("==================");
 					extractModTextures();
-					
+
 					updateProgress(60, 75);
-					
+
 					System.out.println("==================");
 					System.out.println("Compiling....");
 					System.out.println("==================");
 					compressPatchedFiles();
 
 					updateProgress(75, 100);
-					
+
 					System.out.println("==================");
 					System.out.println("Done!");
 					System.out.println("==================");
@@ -606,7 +612,9 @@ public class Soartex_Patcher {
 
 						if (ischecked) {
 
-							try (InputStream in = new URL(moddata[count]).openStream()) {
+							try {
+
+								final InputStream in = new URL(moddata[count]).openStream();
 
 								System.out.println("Downloading: "+moddata[count]);
 
@@ -625,7 +633,7 @@ public class Soartex_Patcher {
 
 								}
 
-								out.close();						
+								out.close();
 
 							} catch (final IOException e) {
 
@@ -646,16 +654,18 @@ public class Soartex_Patcher {
 		}
 
 		private static void extractModTextures () {
+
 			new File(Strings.Common.TEMPORARY_DATA_LOCATION_B).deleteOnExit();
-			final ArrayList<File> files = new ArrayList<>();
+			final ArrayList<File> files = new ArrayList<File>();
 			getFiles(new File(Strings.Common.TEMPORARY_DATA_LOCATION_A), files);
 
 			for (final File file : files) {
 				//debug
 				System.out.print("Extracting: "+file.getName());
-				UnZip.unZipIt(file.getAbsolutePath(), Strings.Common.TEMPORARY_DATA_LOCATION_B);				
+				UnZip.unZipIt(file.getAbsolutePath(), Strings.Common.TEMPORARY_DATA_LOCATION_B);
 			}
 			delete(new File(Strings.Common.TEMPORARY_DATA_LOCATION_A));
+
 		}
 
 		/*private static void downloadTexturePack () {
@@ -682,7 +692,7 @@ public class Soartex_Patcher {
 
 				}
 
-				out.close();						
+				out.close();
 
 			} catch (final IOException e) {
 
@@ -903,12 +913,14 @@ public class Soartex_Patcher {
 		}
 
 		private static void loadTable () {
+
 			//iteminfo storage
-			final ArrayList<String[]> itemsInfo = new ArrayList<String[]>();		
-			final ArrayList<String> itemsInfoUrl = new ArrayList<String>();	
+			final ArrayList<String[]> itemsInfo = new ArrayList<String[]>();
+			final ArrayList<String> itemsInfoUrl = new ArrayList<String>();
+
 			try {
 				tabledata = new URL(Strings.Common.MODDED_URL + Strings.Common.MOD_CSV);
-				moddatamap = new HashMap<>();
+				moddatamap = new HashMap<TableItem, String>();
 				final BufferedReader in = new BufferedReader(new InputStreamReader(tabledata.openStream()));
 				readline = in.readLine();
 
@@ -918,7 +930,7 @@ public class Soartex_Patcher {
 					//test to see if file is there
 					try {
 						zipurl.openStream();
-					} catch (final IOException e) { 
+					} catch (final IOException e) {
 						e.printStackTrace();
 						readline = in.readLine();
 						continue;
@@ -946,22 +958,22 @@ public class Soartex_Patcher {
 
 					//size
 					try{
-						String temp= readline.split(Strings.Common.COMMA)[3];
+						final String temp= readline.split(Strings.Common.COMMA)[3];
 						final long size = Integer.parseInt(temp);
 
 						if (size > 1024 && size < 1048576 ) itemtext[3] = String.valueOf(size / 1024) + Strings.Common.KILOBYTES;
-						else if (size > 1048576) itemtext[3] = String.valueOf(size / (1048576)) + Strings.Common.MEGABYTES;
+						else if (size > 1048576) itemtext[3] = String.valueOf(size / 1048576) + Strings.Common.MEGABYTES;
 						else itemtext[3] = String.valueOf(size) + Strings.Common.BYTES;
 					} catch(final Exception e){
 						itemtext[1] = "Unknown";
-					}					
+					}
 
 					//date modified
 					try{
 						itemtext[4] = readline.split(Strings.Common.COMMA)[4];
 					} catch(final Exception e){
 						itemtext[4] = "Unknown";
-					}					
+					}
 
 					if (readline == null) return;
 					//save info
@@ -971,11 +983,11 @@ public class Soartex_Patcher {
 					display.syncExec(new Runnable() {
 						@Override public void run () {
 							info1.setText(tempCount++ + " mods loaded");
-							info2.setText("Loading: " + readline.split(Strings.Common.COMMA)[0]);							
+							info2.setText("Loading: " + readline.split(Strings.Common.COMMA)[0]);
 						}});
 
-					readline = in.readLine();							
-				}		
+					readline = in.readLine();
+				}
 			} catch (final IOException e) {
 
 				e.printStackTrace();
@@ -988,9 +1000,12 @@ public class Soartex_Patcher {
 
 			new Thread(new Runnable() {
 
-				@Override public void run () { 
+				@Override public void run () {
+
 					display.syncExec(new Runnable() {
+
 						@Override public void run () {
+
 							name.setWidth(100);
 							gameversion.setWidth(50);
 							version.setWidth(50);
@@ -1003,7 +1018,7 @@ public class Soartex_Patcher {
 								try {
 									Thread.sleep(10);
 									shell.update();
-								} catch (InterruptedException e) {}
+								} catch (final InterruptedException e) {}
 							}
 							name.pack();
 							gameversion.pack();
@@ -1011,11 +1026,16 @@ public class Soartex_Patcher {
 							size.pack();
 							modified.pack();
 							System.out.println("=======DONE=======");
-						}});
+
+						}
+
+					});
+
 				}
+
 			}).start();
 		}
-	}
 
+	}
 
 }

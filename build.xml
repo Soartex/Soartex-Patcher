@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<project name="Soartex-Patcher" default="build">
+	<target name="build" depends="clean, compile, windows, mac, linux"/>
+	<target name="clean">
+		<delete dir="build"/>
+		<delete dir="bin"/>
+	</target>
+	<target name="compile">
+		<mkdir dir="bin"/>
+		<javac srcdir="src"
+			destdir="bin"
+			classpath="lib\win32\swt.jar;lib\win64\swt.jar;lib\mac64\swt.jar;lib\linux32\swt.jar;lib\linux64\swt.jar"
+			target="1.6"
+			source="1.6"
+			includeantruntime="false"
+		/>
+	</target>
+	<target name="windows">
+		<jar destfile="build\Soartex-Patcher-Win64.jar">
+			<fileset dir="bin"/>
+			<zipfileset src="lib\jar-in-jar-loader.zip"/>
+			<zipfileset dir="lib\win64" includes="swt.jar"/>
+			<fileset dir="" includes="icon.ico"/>
+		    <manifest>
+		    	<attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader"/>
+		    	<attribute name="Rsrc-Main-Class" value="net.soartex.patcher.Soartex_Patcher"/>
+		    	<attribute name="Class-Path" value="."/>
+		    	<attribute name="Rsrc-Class-Path" value="./ swt.jar"/>
+		    </manifest>
+		</jar>
+		<jar destfile="build\Soartex-Patcher-Win32.jar">
+			<fileset dir="bin"/>
+			<zipfileset src="lib\jar-in-jar-loader.zip"/>
+			<zipfileset dir="lib\win32" includes="swt.jar"/>
+			<fileset dir="" includes="icon.ico"/>
+			<manifest>
+			   	<attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader"/>
+			   	<attribute name="Rsrc-Main-Class" value="net.soartex.patcher.Soartex_Patcher"/>
+			   	<attribute name="Class-Path" value="."/>
+			   	<attribute name="Rsrc-Class-Path" value="./ swt.jar"/>
+			</manifest>
+		</jar>
+	</target>
+	<target name="mac">
+		<jar destfile="build\Soartex-Patcher-Mac64.jar">
+			<fileset dir="bin"/>
+			<zipfileset src="lib\jar-in-jar-loader.zip"/>
+			<zipfileset dir="lib\mac64" includes="swt.jar"/>
+			<fileset dir="" includes="icon.ico"/>
+		    <manifest>
+		    	<attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader"/>
+		    	<attribute name="Rsrc-Main-Class" value="net.soartex.patcher.Soartex_Patcher"/>
+		    	<attribute name="Class-Path" value="."/>
+		    	<attribute name="Rsrc-Class-Path" value="./ swt.jar"/>
+		    </manifest>
+		</jar>
+	</target>
+	<target name="linux">
+		<jar destfile="build\Soartex-Patcher-Linux64.jar">
+			<fileset dir="bin"/>
+			<zipfileset src="lib\jar-in-jar-loader.zip"/>
+			<zipfileset dir="lib\linux64" includes="swt.jar"/>
+			<fileset dir="" includes="icon.ico"/>
+		    <manifest>
+		    	<attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader"/>
+		    	<attribute name="Rsrc-Main-Class" value="net.soartex.patcher.Soartex_Patcher"/>
+		    	<attribute name="Class-Path" value="."/>
+		    	<attribute name="Rsrc-Class-Path" value="./ swt.jar"/>
+		    </manifest>
+		</jar>
+		<jar destfile="build\Soartex-Patcher-Linux32.jar">
+			<fileset dir="bin"/>
+			<zipfileset src="lib\jar-in-jar-loader.zip"/>
+			<zipfileset dir="lib\linux32" includes="swt.jar"/>
+			<fileset dir="" includes="icon.ico"/>
+		    <manifest>
+		    	<attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader"/>
+		    	<attribute name="Rsrc-Main-Class" value="net.soartex.patcher.Soartex_Patcher"/>
+		    	<attribute name="Class-Path" value="."/>
+		    	<attribute name="Rsrc-Class-Path" value="./ swt.jar"/>
+		    </manifest>
+		</jar>
+	</target>
+</project>

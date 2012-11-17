@@ -4,12 +4,12 @@ enum Languages {
 
 	English,
 	French,
-	Spanish, 
+	Spanish,
 	Italian,
 	German,
 	Hebrew,
 	Arabic,
 	Chinese,
 	Japanese;
-	
+
 }

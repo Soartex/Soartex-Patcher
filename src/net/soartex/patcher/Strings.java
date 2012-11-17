@@ -5,69 +5,70 @@ import java.io.File;
 import java.lang.reflect.Field;
 
 class Strings {
-	
+
 	static String getString (final StringNames name, final Languages language) throws Exception {
-		
+
 		Field field;
-		
+
 		try {
-		
+
 			field = Class.forName("net.soartex.patcher.Strings$" + language.toString()).getField(name.toString());
-			
-		} catch (final NoSuchFieldException | ClassNotFoundException e) {
-			
+
+		} catch (final Exception e) {
+
 			field = Class.forName("net.soartex.patcher.Strings$" + Languages.English.toString()).getField(name.toString());
-			
+
 		}
-		
+
 		return (String) field.get(null);
-			
+
 	}
-	
+
 	static final class Common {
+
 		// TODO: Important Strings
-		
+
 		static final String SOARTEX_PATCHER = "Soartex Patcher";
-		
+
 		static final String OS = System.getProperty("os.name").toUpperCase();
-		
+
 		static final String ICON_NAME = "icon.ico";
-		
+
 		static final String MODDED_URL = "http://soartex.net/modded/";
-		
+
 		static final String MOD_CSV = "mods.csv";
 		static final String TECHNIC_LIST = "technic.txt";
 		static final String FTB_LIST = "ftb.txt";
-		
+
 		static final String COMMA = ",";
 		static final String SPACE = " ";
 		static final String UNDERSCORE = "_";
-		
+
 		static final String BYTES = " bytes";
 		static final String KILOBYTES = " kilobytes";
 		static final String MEGABYTES = " megabytes";
-		
+
 		static final String DATE_FORMAT = "MM/dd/yyyy";
-		
+
 		static final String TEMPORARY_DATA_LOCATION_A = getTMP() + File.separator + ".Soartex_Launcher_A";
 		static final String TEMPORARY_DATA_LOCATION_B = getTMP() + File.separator + ".Soartex_Launcher_B";
-		
+
 		static final String ZIP_FILES_EXT = "*.zip";
-		
+
 		// TODO: Preferences Keys
-		
+
 		static final String PREF_X = "x";
 		static final String PREF_Y = "y";
-		
+
 		static final String PREF_WIDTH = "width";
 		static final String PREF_HEIGHT = "height";
-		
+
 		static final String PREF_MAX = "maximized";
-		
+
 		static final String PREF_LANG = "language";
-		
+
 		// TODO: Methods
-		
+
 		private static String getTMP () {
 
 			if (OS.contains("WIN")) return System.getenv("TMP");
@@ -78,7 +79,7 @@ class Strings {
 			return System.getProperty("user.dir");
 
 		}
-		
+
 		static String getMinecraftDir () {
 
 			if (OS.contains("WIN")) return System.getenv("APPDATA") + "\\.minecraft";
@@ -90,30 +91,30 @@ class Strings {
 
 
 		}
-		
+
 	}
-	
+
 	public static final class English {
-		
+
 		public static final String TECHNIC_BUTTON = "Technic";
 		public static final String FTB_BUTTON = "FTB (WIP!)";
 		public static final String ALL_BUTTON = "Select All";
 		public static final String NONE_BUTTON = "Select None";
-		
+
 		public static final String NAME_COLUMN = "Name";
 		public static final String VERSION_COLUMN = "Version";
 		public static final String GAMEVERSION_COLUMN = "Game Version";
 		public static final String SIZE_COLUMN = "Size";
 		public static final String MODIFIED_COLUMN = "Updated";
-		
+
 		public static final String BROWSE_BUTTON = "Browse";
-		
+
 		public static final String ZIP_FILES = "Texture Packs (*.zip)";
-		
+
 		public static final String PATCH_BUTTON = "Patch!";
-		
+
 		public static final String LANGUAGE_ITEM = "Language";
-		
+
 		public static final String ENGLISH_ITEM = "English";
 		public static final String FRENCH_ITEM = "French";
 		public static final String SPANISH_ITEM = "Spanish";
@@ -125,18 +126,18 @@ class Strings {
 		public static final String JAPANESE_ITEM = "Japanese";
 
 		public static final String HELP_ITEM = "Help";
-		
+
 	}
-	
+
 	public static final class French {
-		
+
 		public static final String NAME_COLUMN = "Nom";
 		public static final String SIZE_COLUMN = "Taille";
-		
+
 		public static final String PATCH_BUTTON = "Réparer!";
-		
+
 		public static final String LANGUAGE_ITEM = "Language";
-		
+
 		public static final String ENGLISH_ITEM = "Anglais";
 		public static final String FRENCH_ITEM = "Français";
 		public static final String SPANISH_ITEM = "Espagnol";
@@ -146,20 +147,20 @@ class Strings {
 		public static final String ARABIC_ITEM = "Arabe";
 		public static final String CHINESE_ITEM = "Chinois";
 		public static final String JAPANESE_ITEM = "Japonais";
-		
+
 		public static final String HELP_ITEM = "Assistance";
-		
+
 	}
-	
+
 	public static final class Spanish {
-		
+
 		public static final String NAME_COLUMN = "Nombre";
 		public static final String SIZE_COLUMN = "Tamaño";
-		
+
 		public static final String PATCH_BUTTON = "Remendar";
-		
+
 		public static final String LANGUAGE_ITEM = "Idioma";
-		
+
 		public static final String ENGLISH_ITEM = "Inglés";
 		public static final String FRENCH_ITEM = "Francés";
 		public static final String SPANISH_ITEM = "Español";
@@ -169,20 +170,20 @@ class Strings {
 		public static final String ARABIC_ITEM = "Arabe";
 		public static final String CHINESE_ITEM = "Chino";
 		public static final String JAPANESE_ITEM = "Japonés";
-		
+
 		public static final String HELP_ITEM = "Ayuda";
-		
+
 	}
-	
+
 	public static final class Italian {
-		
+
 		public static final String NAME_COLUMN = "Nome";
 		public static final String SIZE_COLUMN = "Dimensione";
-		
+
 		public static final String PATCH_BUTTON = "Toppa";
-		
+
 		public static final String LANGUAGE_ITEM = "Lingua";
-		
+
 		public static final String ENGLISH_ITEM = "Inglese";
 		public static final String FRENCH_ITEM = "Francese";
 		public static final String SPANISH_ITEM = "Spagnolo";
@@ -194,18 +195,18 @@ class Strings {
 		public static final String JAPANESE_ITEM = "Giapponese";
 
 		public static final String HELP_ITEM = "Aiuto";
-		
+
 	}
-	
+
 	public static final class German {
-		
+
 		public static final String NAME_COLUMN = "Name";
 		public static final String SIZE_COLUMN = "Größe";
-		
+
 		public static final String PATCH_BUTTON = "Flicken";
-		
+
 		public static final String LANGUAGE_ITEM = "Sprache";
-		
+
 		public static final String ENGLISH_ITEM = "Englisch";
 		public static final String FRENCH_ITEM = "Französisch";
 		public static final String SPANISH_ITEM = "Spanisch";
@@ -215,11 +216,11 @@ class Strings {
 		public static final String ARABIC_ITEM = "Arabisch";
 		public static final String CHINESE_ITEM = "Chinese";
 		public static final String JAPANESE_ITEM = "Japanisch";
-		
+
 		public static final String HELP_ITEM = "Beistand";
-		
+
 	}
-	
+
 	public static final class Hebrew {
 
 		public static final String NAME_COLUMN = "שם";
@@ -311,5 +312,5 @@ class Strings {
 		public static final String HELP_ITEM = "手助け";
 
 	}
-	
+
 }

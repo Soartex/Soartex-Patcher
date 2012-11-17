@@ -1,12 +1,14 @@
 package net.soartex.patcher.console;
 
-import java.io.*;
-import java.util.*;
-import javax.swing.*;
+import java.io.CharArrayWriter;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 
-public class TextAreaOutputStream
-extends OutputStream
-{
+import java.util.LinkedList;
+
+import javax.swing.JTextArea;
+
+public class TextAreaOutputStream extends OutputStream {
 
 	// *****************************************************************************
 	// INSTANCE PROPERTIES
@@ -23,64 +25,73 @@ extends OutputStream
 	// INSTANCE CONSTRUCTORS/INIT/CLOSE/FINALIZE
 	// *****************************************************************************
 
-	public TextAreaOutputStream(JTextArea ta) {
+	public TextAreaOutputStream (final JTextArea ta) {
+
 		this(ta,1000);
+
 	}
 
-	public TextAreaOutputStream(JTextArea ta, int ml) {
+	public TextAreaOutputStream (final JTextArea ta, final int ml) {
+
 		textArea=ta;
 		maxLines=ml;
 		lineLengths=new LinkedList<Integer>();
 		curLength=0;
 		oneByte=new byte[1];
+
 	}
 
 	// *****************************************************************************
 	// INSTANCE METHODS - ACCESSORS
 	// *****************************************************************************
 
-	public synchronized void clear() {
+	public synchronized void clear () {
+
 		lineLengths=new LinkedList<Integer>();
 		curLength=0;
 		textArea.setText("");
+
 	}
 
 	/** Get the number of lines this TextArea will hold. */
-	public synchronized int getMaximumLines() { return maxLines; }
+	public synchronized int getMaximumLines () { return maxLines; }
 
 	/** Set the number of lines this TextArea will hold. */
-	public synchronized void setMaximumLines(int val) { maxLines=val; }
+	public synchronized void setMaximumLines (final int val) { maxLines=val; }
 
 	// *****************************************************************************
 	// INSTANCE METHODS
 	// *****************************************************************************
 
-	public void close() {
-		if(textArea!=null) {
+	@Override public void close () {
+
+		if (textArea!=null) {
+
 			textArea=null;
 			lineLengths=null;
 			oneByte=null;
+
 		}
+
 	}
 
-	@Override
-	public void flush() {
-	}
+	@Override public void write (final int val) {
 
-	@Override
-	public void write(int val) {
 		oneByte[0]=(byte)val;
 		write(oneByte,0,1);
+
 	}
 
-	@Override
-	public void write(byte[] ba) {
+	@Override public void write (final byte[] ba) {
+
 		write(ba,0,ba.length);
+
 	}
 
-	@Override
-	public synchronized void write(byte[] ba,int str,int len) {
+	@Override public synchronized void write (final byte[] ba,final int str,final int len) {
+
 		try {
+
 			curLength+=len;
 			if(bytesEndWith(ba,str,len,LINE_SEP)) {
 				lineLengths.addLast(new Integer(curLength));
@@ -91,25 +102,35 @@ extends OutputStream
 			}
 			for(int xa=0; xa<10; xa++) {
 				try { textArea.append(new String(ba,str,len)); break; }
-				catch(Throwable thr) {                                                 // sometimes throws a java.lang.Error: Interrupted attempt to aquire write lock
+				catch(final Throwable thr) {                                                 // sometimes throws a java.lang.Error: Interrupted attempt to aquire write lock
 					if(xa==9) { thr.printStackTrace(); }
 				}
 			}
 			textArea.setCaretPosition(textArea.getText().length());
-		}
-		catch(Throwable thr) {
-			CharArrayWriter caw=new CharArrayWriter();
+
+		} catch (final Throwable thr) {
+
+			final CharArrayWriter caw=new CharArrayWriter();
 			thr.printStackTrace(new PrintWriter(caw,true));
 			textArea.append(System.getProperty("line.separator","\n"));
 			textArea.append(caw.toString());
+
 		}
+
 	}
 
-	private static boolean bytesEndWith(byte[] ba, int str, int len, byte[] ew) {
-		if(len<LINE_SEP.length) { return false; }
-		for(int xa=0,xb=(str+len-LINE_SEP.length); xa<LINE_SEP.length; xa++,xb++) {
+	private static boolean bytesEndWith (final byte[] ba, final int str, final int len, final byte[] ew) {
+
+		if (len<LINE_SEP.length) { return false; }
+
+		for (int xa=0,xb=str+len-LINE_SEP.length; xa<LINE_SEP.length; xa++,xb++) {
+
 			if(LINE_SEP[xa]!=ba[xb]) { return false; }
+
 		}
+
 		return true;
+
 	}
-} /* END PUBLIC CLASS */
+
+}

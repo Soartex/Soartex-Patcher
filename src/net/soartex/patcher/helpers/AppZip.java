@@ -1,15 +1,18 @@
 package net.soartex.patcher.helpers;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-public class AppZip
-{
+public class AppZip {
+
 	static List<String> fileList;
 	private static String SOURCE_FOLDER;
 
@@ -17,27 +20,27 @@ public class AppZip
 	 * Zip it
 	 * @param zipFile output ZIP file location
 	 */
-	public static void zipIt(String zipFile){
+	public static void zipIt (String zipFile) {
 
 		zipFile=zipFile.replaceAll("\\\\", "/");
-		
-		byte[] buffer = new byte[1024];
 
-		try{
+		final byte[] buffer = new byte[1024];
 
-			FileOutputStream fos = new FileOutputStream(zipFile);
-			ZipOutputStream zos = new ZipOutputStream(fos);
-			
+		try {
+
+			final FileOutputStream fos = new FileOutputStream(zipFile);
+			final ZipOutputStream zos = new ZipOutputStream(fos);
+
 			System.out.println("Output to Zip : " + zipFile);
 
 			for(String file : fileList){
-				
+
 				file = file.replaceAll("\\\\", "/");
 				//System.out.println("File Added : " + file);
-				ZipEntry ze= new ZipEntry(file);
+				final ZipEntry ze= new ZipEntry(file);
 				zos.putNextEntry(ze);
 
-				FileInputStream in = 
+				final FileInputStream in =
 						new FileInputStream(SOURCE_FOLDER + File.separator + file);
 
 				int len;
@@ -52,24 +55,31 @@ public class AppZip
 			//remember close it
 			zos.close();
 			fileList = new ArrayList<String>();
-		}catch(IOException ex){
-			ex.printStackTrace();   
+
+		} catch(final IOException ex) {
+
+			ex.printStackTrace();
+
 		}
+
 	}
 
-	public static void  makeList(File node){
+	public static void  makeList (final File node) {
+
 		SOURCE_FOLDER=node.getAbsolutePath();
 		fileList = new ArrayList<String>();
+
 		generateFileList(node);
+
 	}
 	/**
 	 * Traverse a directory and get all files,
-	 * and add the file into fileList  
+	 * and add the file into fileList
 	 * @param node file or directory
 	 */
-	public static void generateFileList(File node){
-		
-		String temp = node.getAbsolutePath().replaceAll("\\\\", "//");
+	public static void generateFileList (File node) {
+
+		final String temp = node.getAbsolutePath().replaceAll("\\\\", "//");
 		//temp = temp.replaceAll("\\", "/");
 		node = new File(temp);
 		//add file only
@@ -78,8 +88,8 @@ public class AppZip
 		}
 
 		if(node.isDirectory()){
-			String[] subNote = node.list();
-			for(String filename : subNote){
+			final String[] subNote = node.list();
+			for(final String filename : subNote){
 				generateFileList(new File(node, filename));
 			}
 		}
@@ -91,7 +101,10 @@ public class AppZip
 	 * @param file file path
 	 * @return Formatted file path
 	 */
-	private static String generateZipEntry(String file){
+	private static String generateZipEntry (final String file) {
+
 		return file.substring(SOURCE_FOLDER.length()+1, file.length());
+
 	}
+
 }
