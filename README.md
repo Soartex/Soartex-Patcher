@@ -1,6 +1,6 @@
-### Modded pack patcher for Soartex Fanver
+## Modded pack patcher for Soartex Fanver
 
-Features:
+### Features
 
 * Mod list, fetched from server.
 * User checks wanted mods.
@@ -10,8 +10,8 @@ Features:
 
 * * *
 
-To use this project clone the repository and download the SWT jar for your platform, don't worry, it's ignored.
+To use this project just clone the repository.
 
-This project will check for the sources for the SWT Jar in a folder called 'src' under 'lib'. Get them yourself for your own platform, the folder is ignored for obvious legal purposes.
+This project will check for the sources for each SWT Jar in a file called 'src.zip' under each platform's folder. Get them yourself for your own platform, the zip is ignored for obvious legal purposes.
 
-__This project uses Java SE 1.7 (Update 7). If you still use Java 6, please update, for Java 6 is old and outdated. If you are on Mac, please go to java.com and get the latest Java SE 7.07. If you are on Mac OS 10.6 or lower, you should upgrade to Lion or Mountain Lion.__
+__This project is now compatible with Java 6; you no longer need to upgrade to Java 7, though it is recommended.__
