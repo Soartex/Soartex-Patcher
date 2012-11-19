@@ -1,4 +1,4 @@
-## Modded pack patcher for Soartex Fanver
+## Modded pack patcher for Soartex Fanver [![Build Status](https://secure.travis-ci.org/Soartex-Fanver/Soartex-Patcher.png?branch=master)](https://travis-ci.org/Soartex-Fanver/Soartex-Patcher)
 
 ### Features
 
