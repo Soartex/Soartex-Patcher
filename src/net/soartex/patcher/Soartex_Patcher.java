@@ -3,6 +3,7 @@ package net.soartex.patcher;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.io.PrintStream;
+import java.net.URL;
 
 import javax.swing.*;
 
@@ -35,10 +36,8 @@ public class Soartex_Patcher {
 
 		// TODO: Icon loading
 		try {
-			java.net.URL url = ClassLoader.getSystemResource("net/soartex/patcher/"+Strings.ICON_NAME);
-			Toolkit kit = Toolkit.getDefaultToolkit();
-			Image img = kit.createImage(url);
-			frame.setIconImage(img);
+			URL url = getClass().getClassLoader().getResource(Strings.ICON_NAME);
+			frame.setIconImage(Toolkit.getDefaultToolkit().createImage(url));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

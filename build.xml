@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<project name="Soartex-Patcher" default="build">
+	<property name="version" value="1.0"/>
+	<target name="build" depends="clean, compile, jar"/>
+	<target name="clean">
+		<delete dir="build"/>
+		<delete dir="bin"/>
+	</target>
+	<target name="compile">
+		<mkdir dir="bin"/>
+		<javac srcdir="src"
+			destdir="bin"
+			target="1.6"
+			source="1.6"
+			includeantruntime="false"
+		/>
+	</target>
+	<target name="jar">
+		<jar destfile="build\Soartex-Patcher-${version}.jar">
+			<fileset dir="bin"/>
+		    <manifest>
+		    	<attribute name="Main-Class" value="net.soartex.patcher.Main"/>
+		    	<attribute name="Class-Path" value="."/>
+		    </manifest>
+		</jar>
+	</target>
+</project>
