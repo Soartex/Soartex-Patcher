@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="lib/win64/swt.jar" sourcepath="lib/win64/src.zip"/>
-	<classpathentry kind="lib" path="lib/win32/swt.jar" sourcepath="lib/win32/src.zip"/>
-	<classpathentry kind="lib" path="lib/mac64/swt.jar" sourcepath="lib/mac64/src.zip"/>
-	<classpathentry kind="lib" path="lib/linux64/swt.jar" sourcepath="lib/linux64/src.zip"/>
-	<classpathentry kind="lib" path="lib/linux32/swt.jar" sourcepath="lib/linux32/src.zip"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/jre6"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
