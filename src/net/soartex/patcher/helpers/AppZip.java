@@ -31,7 +31,7 @@ public class AppZip {
 			final FileOutputStream fos = new FileOutputStream(zipFile);
 			final ZipOutputStream zos = new ZipOutputStream(fos);
 
-			System.out.println("Output to Zip : " + zipFile);
+			System.out.println("Outputing to Zip : " + zipFile);
 
 			for(String file : fileList){
 

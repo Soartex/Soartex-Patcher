@@ -37,7 +37,7 @@ public class HtmlAccessor {
 			URL data2 = new URL(Strings.GOD_URL+Strings.GOD_TABLE);
 			final BufferedReader in2 = new BufferedReader(new InputStreamReader(data2.openStream()));
 			String readline2 = in2.readLine();
-			Strings.setStrings(readline, readline2);
+			Strings.setUrlStrings(readline, readline2);
 		}
 		catch(Exception e){
 			e.printStackTrace();
@@ -61,13 +61,13 @@ public class HtmlAccessor {
 				
 				// TODO: uncomment when done testing
 				//test to see if file is there
-				/*try {
+				try {
 					zipurl.openStream();
 				} catch (final IOException e) {
 					e.printStackTrace();
 					readline = in.readLine();
 					continue;
-				}*/
+				}
 				
 				//add file info
 				final String[] itemtext = new String[5];

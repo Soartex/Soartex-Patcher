@@ -2,8 +2,10 @@ package net.soartex.patcher;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.io.PrintStream;
 import java.net.URL;
+import java.util.ArrayList;
 
 import javax.swing.*;
 
@@ -26,7 +28,7 @@ public class Soartex_Patcher {
 	public void initializeWindow() {
 		frame = new JFrame();
 		frame.setSize(Integer.parseInt(Strings.PREF_WIDTH),Integer.parseInt(Strings.PREF_HEIGHT));
-		
+
 		//layout
 		GridBagLayout gd = new GridBagLayout();
 		frame.setLayout(gd);
@@ -51,7 +53,7 @@ public class Soartex_Patcher {
 		aJProgressBar.setStringPainted(false);
 		aJProgressBar.setIndeterminate(true);
 		frame1.add(aJProgressBar, BorderLayout.NORTH);
-		
+
 		JLabel title = new JLabel("Please Wait While We Load Your Files", JLabel.CENTER);
 		title.setForeground(Color.white);
 		frame1.add(title, BorderLayout.SOUTH);
@@ -103,7 +105,7 @@ public class Soartex_Patcher {
 
 		// TODO: Menu
 		JMenuBar menuBar = new JMenuBar();
-	
+
 		JMenu menu = new JMenu("File");
 		menuBar.add(menu);
 
@@ -112,20 +114,20 @@ public class Soartex_Patcher {
 		menu.add(menuItem);
 
 		menu.addSeparator();
-		
+
 		//hide console
 		JCheckBoxMenuItem cbMenuItem = new JCheckBoxMenuItem(Strings.MENU_DATA[1]);
 		cbMenuItem.addActionListener(new MainMenu());
 		menu.add(cbMenuItem);
-		
+
 		//show lastest updated
 		cbMenuItem = new JCheckBoxMenuItem(Strings.MENU_DATA[2]);
 		cbMenuItem.addActionListener(new MainMenu());
 		menu.add(cbMenuItem);
-		
+
 		//Make second menu for packs
 		menu = new JMenu("Pack");
-		
+
 		ButtonGroup group = new ButtonGroup();
 		JRadioButtonMenuItem rbMenuItem = new JRadioButtonMenuItem(Strings.MENU_DATA[3]);
 		rbMenuItem.setSelected(true);
@@ -144,22 +146,22 @@ public class Soartex_Patcher {
 		group.add(rbMenuItem);
 		menu.add(rbMenuItem);
 		menu.addActionListener(new MainMenu());
-		
+
 		menuBar.add(menu);
-		
+
 		//patch menu/button
 		menuBar.add(Box.createHorizontalGlue());
 		menu = new JMenu("Patch");
 		menuItem = new JMenuItem(Strings.MENU_DATA[6]);
 		menuItem.addActionListener(new MainMenu());
 		menu.add(menuItem);
-		
+
 		menu.addSeparator();
-		
+
 		menuItem = new JMenuItem(Strings.MENU_DATA[7]);
 		menuItem.addActionListener(new MainMenu());
 		menu.add(menuItem);
-		
+
 		menuBar.add(menu);
 
 		frame.setJMenuBar(menuBar);
@@ -178,8 +180,8 @@ public class Soartex_Patcher {
 		c.gridy = 1;
 
 		frame.add(new JScrollPane(ta),c);
-		
-		
+
+
 		System.out.println(Strings.WELCOME_MSG+"Program Started Ready to Patch!");
 	}
 
@@ -193,5 +195,30 @@ public class Soartex_Patcher {
 	public static void checkBox(int row, int col){
 		tableData[row][0]= new Boolean(!(Boolean)tableData[row][0]);
 		table.updateUI();
+	}
+
+	//called to get modded checked. Returns string arraylist
+	public static ArrayList<String> getCheckedMods() {
+		ArrayList<String> temp = new ArrayList<String>();
+		for(int i=0; i<tableData.length;i++){
+			if(tableData[i][0] != null && (Boolean)tableData[i][0]){
+				temp.add((String) tableData[i][1]);
+			}
+		}
+		return temp;
+	}
+
+	public static void browseFiles() {
+		final JFileChooser fc = new JFileChooser();
+		int returnVal = fc.showOpenDialog(frame);
+		if (returnVal != JFileChooser.APPROVE_OPTION) return;
+		File chosenFile = fc.getSelectedFile();
+		
+		if(chosenFile.getAbsolutePath().endsWith(Strings.ZIP_FILES_EXT.substring(1))){
+			Strings.setModdedZipLocation(chosenFile.getAbsolutePath());
+		}
+		else{
+			// TODO: show error dialog
+		}
 	}
 }

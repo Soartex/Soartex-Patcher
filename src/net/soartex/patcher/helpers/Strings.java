@@ -36,6 +36,9 @@ public class Strings {
 	public static String MODDED_URL = "";
 	public static String MODDED_CVS = "";	
 	
+	//global files
+	public static String MODDEDZIP_LOCATION = "";
+	
 	public static final String COMMA = ",";
 	public static final String SPACE = " ";
 	public static final String UNDERSCORE = "_";
@@ -62,7 +65,11 @@ public class Strings {
 		WELCOME_MSG=msg;
 	}
 	
-	public static void setStrings(String moddedDir, String modCvsDir){
+	public static void setModdedZipLocation(String loc){
+		MODDEDZIP_LOCATION=loc;
+	}
+	
+	public static void setUrlStrings(String moddedDir, String modCvsDir){
 		MODDED_URL=moddedDir;
 		MODDED_CVS=modCvsDir;
 	}
