@@ -1,7 +1,6 @@
 package net.soartex.patcher;
 
 import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.PrintStream;
 import java.net.URL;
@@ -59,6 +58,7 @@ public class Soartex_Patcher {
 		frame1.add(title, BorderLayout.SOUTH);
 		frame1.setIconImage(frame.getIconImage());
 		frame1.setSize(300, 80);
+		frame1.setResizable(false);
 		frame1.setVisible(true);
 
 		// TODO: Download Http Files
@@ -131,21 +131,21 @@ public class Soartex_Patcher {
 		ButtonGroup group = new ButtonGroup();
 		JRadioButtonMenuItem rbMenuItem = new JRadioButtonMenuItem(Strings.MENU_DATA[3]);
 		rbMenuItem.setSelected(true);
-		rbMenuItem.setMnemonic(KeyEvent.VK_R);
+		rbMenuItem.addActionListener(new MainMenu());
 		group.add(rbMenuItem);
 		menu.add(rbMenuItem);
 
 		rbMenuItem = new JRadioButtonMenuItem(Strings.MENU_DATA[4]);
-		rbMenuItem.setMnemonic(KeyEvent.VK_O);
+		rbMenuItem.addActionListener(new MainMenu());
 		group.add(rbMenuItem);
 		menu.add(rbMenuItem);
 		menuBar.add(menu);
 
 		rbMenuItem = new JRadioButtonMenuItem(Strings.MENU_DATA[5]);
-		rbMenuItem.setMnemonic(KeyEvent.VK_O);
+		rbMenuItem.addActionListener(new MainMenu());
 		group.add(rbMenuItem);
 		menu.add(rbMenuItem);
-		menu.addActionListener(new MainMenu());
+		
 
 		menuBar.add(menu);
 
@@ -209,7 +209,8 @@ public class Soartex_Patcher {
 	}
 
 	public static void browseFiles() {
-		final JFileChooser fc = new JFileChooser();
+		JFileChooser fc = new JFileChooser();
+		fc.setPreferredSize(new Dimension(600,600));
 		int returnVal = fc.showOpenDialog(frame);
 		if (returnVal != JFileChooser.APPROVE_OPTION) return;
 		File chosenFile = fc.getSelectedFile();
@@ -219,6 +220,9 @@ public class Soartex_Patcher {
 		}
 		else{
 			// TODO: show error dialog
+			System.out.println("==================");
+			System.out.println("Error: Not a valid file!");
+			System.out.println("==================");
 		}
 	}
 }
