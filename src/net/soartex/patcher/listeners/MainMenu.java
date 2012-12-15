@@ -13,7 +13,7 @@ import net.soartex.patcher.Patch_Controller;
 import net.soartex.patcher.Soartex_Patcher;
 import net.soartex.patcher.helpers.Strings;
 
-public class MainMenu implements ActionListener {
+public class MainMenu implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
@@ -26,9 +26,11 @@ public class MainMenu implements ActionListener {
 		}
 		//hid console
 		else if(e.getActionCommand().equals(Strings.MENU_DATA[1])){
+			System.out.println("This feature is not implemented yet");
 		}
 		//show last updated
 		else if(e.getActionCommand().equals(Strings.MENU_DATA[2])){
+			System.out.println("This feature is not implemented yet");
 		}
 		//browse button
 		else if(e.getActionCommand().equals(Strings.MENU_DATA[3])){
@@ -67,6 +69,7 @@ public class MainMenu implements ActionListener {
 		else{
 			for(int z=0; z<Strings.PACK_URLS.size();z++){
 				if(e.getActionCommand().equals(Strings.PACK_TITLES.get(z))){
+					
 					try {
 						final BufferedReader in = new BufferedReader(new InputStreamReader(new URL(Strings.PACK_URLS.get(z)).openStream()));
 						for(int i=0; i<Soartex_Patcher.tableData.length;i++){
@@ -97,4 +100,5 @@ public class MainMenu implements ActionListener {
 			}
 		}
 	}
+
 }

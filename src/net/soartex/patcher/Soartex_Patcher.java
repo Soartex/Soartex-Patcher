@@ -135,31 +135,29 @@ public class Soartex_Patcher {
 
 		//loadpacks
 		HtmlAccessor.getPackData();
-		
+
 		//add the packs
-		ButtonGroup group;
+		ButtonGroup group = new ButtonGroup();
 		JRadioButtonMenuItem rbMenuItem;
 		for(String temp : Strings.PACK_TITLES){
-			group = new ButtonGroup();
 			rbMenuItem = new JRadioButtonMenuItem(temp);
-			rbMenuItem.setSelected(true);
+			rbMenuItem.setSelected(false);
 			rbMenuItem.addActionListener(new MainMenu());
 			rbMenuItem.setForeground(Color.white);
 			group.add(rbMenuItem);
 			menu.add(rbMenuItem);
 		}
-		
+
 		//defaults
 		menu.addSeparator();
-		group = new ButtonGroup();
 		rbMenuItem = new JRadioButtonMenuItem("Select All");
-		rbMenuItem.setSelected(true);
+		rbMenuItem.setSelected(false);
 		rbMenuItem.addActionListener(new MainMenu());
 		rbMenuItem.setForeground(Color.white);
 		group.add(rbMenuItem);
 		menu.add(rbMenuItem);
-		
-		group = new ButtonGroup();
+
+
 		rbMenuItem = new JRadioButtonMenuItem("Select None");
 		rbMenuItem.setSelected(true);
 		rbMenuItem.addActionListener(new MainMenu());
@@ -237,7 +235,7 @@ public class Soartex_Patcher {
 		int returnVal = fc.showOpenDialog(frame);
 		if (returnVal != JFileChooser.APPROVE_OPTION) return;
 		File chosenFile = fc.getSelectedFile();
-		
+
 		if(chosenFile.getAbsolutePath().endsWith(Strings.ZIP_FILES_EXT.substring(1))){
 			Strings.setModdedZipLocation(chosenFile.getAbsolutePath());
 		}
@@ -248,4 +246,6 @@ public class Soartex_Patcher {
 			System.out.println("==================");
 		}
 	}
+
+
 }
