@@ -37,7 +37,12 @@ public class HtmlAccessor {
 			URL data2 = new URL(Strings.GOD_URL+Strings.GOD_TABLE);
 			final BufferedReader in2 = new BufferedReader(new InputStreamReader(data2.openStream()));
 			String readline2 = in2.readLine();
-			Strings.setUrlStrings(readline, readline2);
+			
+			URL data3 = new URL(Strings.GOD_URL+Strings.GOD_PACKS);
+			final BufferedReader in3 = new BufferedReader(new InputStreamReader(data3.openStream()));
+			String readline3 = in3.readLine();
+			
+			Strings.setUrlStrings(readline, readline2, readline3);
 		}
 		catch(Exception e){
 			e.printStackTrace();
@@ -61,13 +66,13 @@ public class HtmlAccessor {
 				
 				// TODO: uncomment when done testing
 				//test to see if file is there
-				try {
+				/*try {
 					zipurl.openStream();
 				} catch (final IOException e) {
 					e.printStackTrace();
 					readline = in.readLine();
 					continue;
-				}
+				}*/
 				
 				//add file info
 				final String[] itemtext = new String[5];
@@ -122,6 +127,37 @@ public class HtmlAccessor {
 			temp[i]= itemsInfo.get(i);
 		}
 		return temp;
+	}
+
+	public static void getPackData() {
+		final ArrayList<String> titles = new ArrayList<String>();
+		final ArrayList<String> urls = new ArrayList<String>();
+		try {
+			URL tabledata = new URL(Strings.PACKS_CVS);
+			final BufferedReader in = new BufferedReader(new InputStreamReader(tabledata.openStream()));
+			String readline = in.readLine();
+
+			while (readline != null) {		
+				//titles
+				try{
+					titles.add(readline.split(Strings.COMMA)[0]);
+				} catch(final Exception e){
+					titles.add("Unknown");
+				}
+				//urls of packs
+				try{
+					urls.add(readline.split(Strings.COMMA)[1]);
+				} catch(final Exception e){
+					urls.add("");
+				}
+				readline = in.readLine();
+			}
+			
+			Strings.setPackData(titles, urls);			
+		}
+		catch(Exception e){
+			e.printStackTrace();
+		}
 	}
 
 }

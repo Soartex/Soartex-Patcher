@@ -19,10 +19,10 @@ public class Soartex_Patcher {
 
 	// TODO: Main Components
 	private static JFrame frame;
-	private static JTable table;
+	public static JTable table;
 
 	// TODO: Program Variables
-	private static Object[][] tableData;
+	public static Object[][] tableData;
 
 	public void initializeWindow() {
 		frame = new JFrame();
@@ -107,10 +107,12 @@ public class Soartex_Patcher {
 		JMenuBar menuBar = new JMenuBar();
 
 		JMenu menu = new JMenu("File");
+		menu.setForeground(Color.white);
 		menuBar.add(menu);
 
 		JMenuItem menuItem = new JMenuItem(Strings.MENU_DATA[0]);
 		menuItem.addActionListener(new MainMenu());
+		menuItem.setForeground(Color.white);
 		menu.add(menuItem);
 
 		menu.addSeparator();
@@ -118,48 +120,69 @@ public class Soartex_Patcher {
 		//hide console
 		JCheckBoxMenuItem cbMenuItem = new JCheckBoxMenuItem(Strings.MENU_DATA[1]);
 		cbMenuItem.addActionListener(new MainMenu());
+		cbMenuItem.setForeground(Color.white);
 		menu.add(cbMenuItem);
 
 		//show lastest updated
 		cbMenuItem = new JCheckBoxMenuItem(Strings.MENU_DATA[2]);
 		cbMenuItem.addActionListener(new MainMenu());
+		cbMenuItem.setForeground(Color.white);
 		menu.add(cbMenuItem);
 
 		//Make second menu for packs
 		menu = new JMenu("Pack");
+		menu.setForeground(Color.white);
 
-		ButtonGroup group = new ButtonGroup();
-		JRadioButtonMenuItem rbMenuItem = new JRadioButtonMenuItem(Strings.MENU_DATA[3]);
+		//loadpacks
+		HtmlAccessor.getPackData();
+		
+		//add the packs
+		ButtonGroup group;
+		JRadioButtonMenuItem rbMenuItem;
+		for(String temp : Strings.PACK_TITLES){
+			group = new ButtonGroup();
+			rbMenuItem = new JRadioButtonMenuItem(temp);
+			rbMenuItem.setSelected(true);
+			rbMenuItem.addActionListener(new MainMenu());
+			rbMenuItem.setForeground(Color.white);
+			group.add(rbMenuItem);
+			menu.add(rbMenuItem);
+		}
+		
+		//defaults
+		menu.addSeparator();
+		group = new ButtonGroup();
+		rbMenuItem = new JRadioButtonMenuItem("Select All");
 		rbMenuItem.setSelected(true);
 		rbMenuItem.addActionListener(new MainMenu());
-		group.add(rbMenuItem);
-		menu.add(rbMenuItem);
-
-		rbMenuItem = new JRadioButtonMenuItem(Strings.MENU_DATA[4]);
-		rbMenuItem.addActionListener(new MainMenu());
-		group.add(rbMenuItem);
-		menu.add(rbMenuItem);
-		menuBar.add(menu);
-
-		rbMenuItem = new JRadioButtonMenuItem(Strings.MENU_DATA[5]);
-		rbMenuItem.addActionListener(new MainMenu());
+		rbMenuItem.setForeground(Color.white);
 		group.add(rbMenuItem);
 		menu.add(rbMenuItem);
 		
+		group = new ButtonGroup();
+		rbMenuItem = new JRadioButtonMenuItem("Select None");
+		rbMenuItem.setSelected(true);
+		rbMenuItem.addActionListener(new MainMenu());
+		rbMenuItem.setForeground(Color.white);
+		group.add(rbMenuItem);
+		menu.add(rbMenuItem);
 
 		menuBar.add(menu);
 
 		//patch menu/button
 		menuBar.add(Box.createHorizontalGlue());
 		menu = new JMenu("Patch");
-		menuItem = new JMenuItem(Strings.MENU_DATA[6]);
+		menu.setForeground(Color.white);
+		menuItem = new JMenuItem(Strings.MENU_DATA[3]);
 		menuItem.addActionListener(new MainMenu());
+		menuItem.setForeground(Color.white);
 		menu.add(menuItem);
 
 		menu.addSeparator();
 
-		menuItem = new JMenuItem(Strings.MENU_DATA[7]);
+		menuItem = new JMenuItem(Strings.MENU_DATA[4]);
 		menuItem.addActionListener(new MainMenu());
+		menuItem.setForeground(Color.white);
 		menu.add(menuItem);
 
 		menuBar.add(menu);

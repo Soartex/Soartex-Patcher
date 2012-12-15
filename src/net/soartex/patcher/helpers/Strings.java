@@ -1,6 +1,7 @@
 package net.soartex.patcher.helpers;
 
 import java.io.File;
+import java.util.ArrayList;
 
 public class Strings {
 
@@ -10,24 +11,21 @@ public class Strings {
 	
 	public static final String GOD_TABLE = "tablelocation.txt";
 	public static final String GOD_ZIP = "ziplocation.txt";
+	public static final String GOD_PACKS = "packlocations.txt";
+	public static final String GOD_UPDATE = "patcherversions.txt";
 	public static final String GOD_WELCOME = "welcomemsg.txt";
 	
-
 	public static final String SOARTEX_PATCHER = "Soartex Patcher";
-
 	public static final String OS = System.getProperty("os.name").toUpperCase();
-
 	public static final String ICON_NAME = "icon.png";
 
+	//menu stuff
 	public static final String[] COLUMN_NAMES = {"","Mod Name","Mod Version","MC Version","File Size","Date Modified"};
 	
 	public static final String[] MENU_DATA = {
 		"Soartex Website",
 		"Hide Console",
 		"Show Latest Textures",
-		"Soartex Modded",
-		"Soartex FTB",
-		"Soartex Custom",
 		"Browse",
 		"Patch!"};
 
@@ -35,10 +33,14 @@ public class Strings {
 	public static String WELCOME_MSG = "";
 	public static String MODDED_URL = "";
 	public static String MODDED_CVS = "";	
+	public static String PACKS_CVS = "";	
 	
 	//global files
 	public static String MODDEDZIP_LOCATION = "";
+	public static ArrayList<String> PACK_TITLES = new ArrayList<String>();
+	public static ArrayList<String> PACK_URLS = new ArrayList<String>();
 	
+	//Final Variables
 	public static final String COMMA = ",";
 	public static final String SPACE = " ";
 	public static final String UNDERSCORE = "_";
@@ -54,13 +56,11 @@ public class Strings {
 
 	public static final String ZIP_FILES_EXT = "*.zip";
 
-	// TODO: Preferences Keys
-
+	// TODO: Preferences
 	public static final String PREF_WIDTH = "800";
 	public static final String PREF_HEIGHT = "800";
 
 	// TODO: Methods
-
 	public static void setWelcomeMsgStrings(String msg){
 		WELCOME_MSG=msg;
 	}
@@ -69,9 +69,15 @@ public class Strings {
 		MODDEDZIP_LOCATION=loc;
 	}
 	
-	public static void setUrlStrings(String moddedDir, String modCvsDir){
+	public static void setUrlStrings(String moddedDir, String modCvsDir, String packsUrl){
 		MODDED_URL=moddedDir;
 		MODDED_CVS=modCvsDir;
+		PACKS_CVS=packsUrl;
+	}
+	
+	public static void setPackData(ArrayList<String> temp, ArrayList<String> temp2){
+		PACK_TITLES=temp;
+		PACK_URLS=temp2;
 	}
 	
 	private static String getTMP () {
@@ -84,18 +90,4 @@ public class Strings {
 		return System.getProperty("user.dir");
 
 	}
-
-	static String getMinecraftDir () {
-
-		if (OS.contains("WIN")) return System.getenv("APPDATA") + "\\.minecraft";
-
-		else if (OS.contains("MAC") || OS.contains("DARWIN")) return System.getProperty("user.home") + "/Library/Application Support/minecraft";
-		else if (OS.contains("NUX")) return System.getProperty("user.home");
-
-		return System.getProperty("user.dir");
-
-
-	}
-
-
 }
