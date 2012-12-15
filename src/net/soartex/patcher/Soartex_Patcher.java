@@ -18,7 +18,7 @@ import net.soartex.patcher.listeners.MainMenu;
 public class Soartex_Patcher {
 
 	// TODO: Main Components
-	private static JFrame frame;
+	public static JFrame frame;
 	public static JTable table;
 
 	// TODO: Program Variables
@@ -47,6 +47,9 @@ public class Soartex_Patcher {
 
 	public void downloadHttpFiles() {
 		JFrame frame1 = new JFrame("Loading Patcher Files");
+		GridLayout g1 = new GridLayout(4,1);
+		frame1.setLayout(g1);
+		
 		frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		final JProgressBar aJProgressBar = new JProgressBar(JProgressBar.HORIZONTAL);
 		aJProgressBar.setStringPainted(false);
@@ -55,9 +58,18 @@ public class Soartex_Patcher {
 
 		JLabel title = new JLabel("Please Wait While We Load Your Files", JLabel.CENTER);
 		title.setForeground(Color.white);
-		frame1.add(title, BorderLayout.SOUTH);
+		frame1.add(title);
+		
+		JLabel title2 = new JLabel("", JLabel.CENTER);
+		title2.setForeground(Color.white);
+		frame1.add(title2);
+		
+		JLabel title3 = new JLabel("", JLabel.CENTER);
+		title3.setForeground(Color.white);
+		frame1.add(title3);
+		
 		frame1.setIconImage(frame.getIconImage());
-		frame1.setSize(300, 80);
+		frame1.setSize(300, 100);
 		frame1.setResizable(false);
 		frame1.setVisible(true);
 
@@ -67,7 +79,7 @@ public class Soartex_Patcher {
 
 		// TODO: load table
 		//note: checkmarks are stored as booleans
-		Object[][] temp = HtmlAccessor.loadTable();
+		Object[][] temp = HtmlAccessor.loadTable(title2,title3);
 		tableData = new Object[temp.length][];
 		for(int i=0; i<temp.length;i++){
 			Object[] temp2={new Boolean(false),
@@ -79,6 +91,7 @@ public class Soartex_Patcher {
 			tableData[i]=temp2;
 		}
 		//done
+		frame.setLocationRelativeTo(frame1);
 		frame1.setVisible(false);
 	}
 

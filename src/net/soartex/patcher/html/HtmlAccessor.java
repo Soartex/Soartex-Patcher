@@ -6,6 +6,8 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 
+import javax.swing.JLabel;
+
 
 import net.soartex.patcher.helpers.Strings;
 
@@ -49,7 +51,7 @@ public class HtmlAccessor {
 		}
 	}
 
-	public static Object[][] loadTable () {
+	public static Object[][] loadTable (JLabel title, JLabel title3) {
 
 		//iteminfo storage
 		final ArrayList<String[]> itemsInfo = new ArrayList<String[]>();
@@ -59,20 +61,20 @@ public class HtmlAccessor {
 			URL tabledata = new URL(Strings.MODDED_CVS);
 			final BufferedReader in = new BufferedReader(new InputStreamReader(tabledata.openStream()));
 			String readline = in.readLine();
-
+			int count=0;
 			while (readline != null) {
 
 				final URL zipurl = new URL(Strings.MODDED_URL + readline.split(Strings.COMMA)[0].replace(Strings.SPACE, Strings.UNDERSCORE) + Strings.ZIP_FILES_EXT.substring(1));
 				
 				// TODO: uncomment when done testing
 				//test to see if file is there
-				/*try {
+				try {
 					zipurl.openStream();
 				} catch (final IOException e) {
 					e.printStackTrace();
 					readline = in.readLine();
 					continue;
-				}*/
+				}
 				
 				//add file info
 				final String[] itemtext = new String[5];
@@ -112,6 +114,8 @@ public class HtmlAccessor {
 				}
 				//save info
 				itemsInfo.add(itemtext);
+				title.setText(" Mod Number: "+(count++));
+				title3.setText("Loading: "+itemtext[0]);
 				itemsInfoUrl.add(zipurl.toString());
 
 				readline = in.readLine();

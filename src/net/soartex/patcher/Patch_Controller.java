@@ -1,10 +1,18 @@
 package net.soartex.patcher;
 
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.GridLayout;
+import java.awt.Toolkit;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JProgressBar;
 
 import net.soartex.patcher.helpers.AppZip;
 import net.soartex.patcher.helpers.Strings;
@@ -13,55 +21,85 @@ import net.soartex.patcher.helpers.UnZip;
 public class Patch_Controller {
 
 	String zipLocation;
-
-	//final URL zipurl = 
-	//new URL(Strings.MODDED_URL + readline.split(Strings.COMMA)[0].replace(Strings.SPACE, Strings.UNDERSCORE) + 
-	//Strings.ZIP_FILES_EXT.substring(1));
-
-
+	JLabel title;
+	JProgressBar aJProgressBar;
+	JFrame frame1;
+	
 	public Patch_Controller(String path){
 		zipLocation=path;
 	}
 
+	private void makeProgressWiondow(){
+		frame1 = new JFrame("Patching");
+		GridLayout g1 = new GridLayout(2,1);
+		frame1.setLayout(g1);
+		
+		frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		aJProgressBar = new JProgressBar(JProgressBar.HORIZONTAL);
+		aJProgressBar.setStringPainted(true);
+		frame1.add(aJProgressBar);
+
+		title = new JLabel("", JLabel.CENTER);
+		title.setForeground(Color.white);
+		frame1.add(title);
+		try {
+			URL url = getClass().getClassLoader().getResource(Strings.ICON_NAME);
+			frame1.setIconImage(Toolkit.getDefaultToolkit().createImage(url));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		frame1.setSize(300, 80);
+		frame1.setResizable(false);
+		frame1.setLocationRelativeTo(Soartex_Patcher.frame);
+		frame1.setVisible(true);
+	}
+	
 	public void run(){
+		
+		makeProgressWiondow();
+		
+		title.setText("Compiling New Modlist");
+		aJProgressBar.setValue(0);
 		System.out.println("==================");
 		System.out.println("Compiling New Modlist");
 		System.out.println("==================");
-		makeNewCSVFile();
-
-		//updateProgress(10, 25);
-
+		makeNewCSVFile();		
+		
+		title.setText("Downloading Mods");
+		aJProgressBar.setValue(20);
 		System.out.println("==================");
 		System.out.println("Downloading Mods");
 		System.out.println("==================");
 		downloadModTextures();
 
-		//updateProgress(25, 35);
-
+		title.setText("Extracting Main Zip");
+		aJProgressBar.setValue(40);
 		System.out.println("==================");
 		System.out.println("Extracting Main Zip");
 		System.out.println("==================");
 		extractTexturePack();
 
-		//updateProgress(35, 60);
-
+		title.setText("Extracting Mods");
+		aJProgressBar.setValue(60);
 		System.out.println("==================");
 		System.out.println("Extracting Mods");
 		System.out.println("==================");
 		extractModTextures();
-
-		//updateProgress(60, 75);
-
+		
+		title.setText("Compiling");
+		aJProgressBar.setValue(80);
 		System.out.println("==================");
 		System.out.println("Compiling....");
 		System.out.println("==================");
 		compressPatchedFiles();
 
-		//updateProgress(75, 100);
-
+		title.setText("Done!");
+		aJProgressBar.setValue(100);
 		System.out.println("==================");
 		System.out.println("Done!");
 		System.out.println("==================");
+		
+		frame1.setVisible(false);
 	}
 
 	private void downloadModTextures() {
