@@ -1,10 +1,8 @@
 package net.soartex.patcher;
 
 import java.awt.*;
-import java.io.File;
 import java.io.PrintStream;
 import java.net.URL;
-import java.util.ArrayList;
 
 import javax.swing.*;
 
@@ -42,7 +40,6 @@ public class Soartex_Patcher {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	public void downloadHttpFiles() {
@@ -224,41 +221,5 @@ public class Soartex_Patcher {
 		frame.setFocusableWindowState(true);
 		frame.setResizable(false);
 	}
-
-	//this is called by the mouse listener to update the table data that a row in colum 0 has been clicked.
-	public static void checkBox(int row, int col){
-		tableData[row][0]= new Boolean(!(Boolean)tableData[row][0]);
-		table.updateUI();
-	}
-
-	//called to get modded checked. Returns string arraylist
-	public static ArrayList<String> getCheckedMods() {
-		ArrayList<String> temp = new ArrayList<String>();
-		for(int i=0; i<tableData.length;i++){
-			if(tableData[i][0] != null && (Boolean)tableData[i][0]){
-				temp.add((String) tableData[i][1]);
-			}
-		}
-		return temp;
-	}
-
-	public static void browseFiles() {
-		JFileChooser fc = new JFileChooser();
-		fc.setPreferredSize(new Dimension(600,600));
-		int returnVal = fc.showOpenDialog(frame);
-		if (returnVal != JFileChooser.APPROVE_OPTION) return;
-		File chosenFile = fc.getSelectedFile();
-
-		if(chosenFile.getAbsolutePath().endsWith(Strings.ZIP_FILES_EXT.substring(1))){
-			Strings.setModdedZipLocation(chosenFile.getAbsolutePath());
-		}
-		else{
-			// TODO: show error dialog
-			System.out.println("==================");
-			System.out.println("Error: Not a valid file!");
-			System.out.println("==================");
-		}
-	}
-
 
 }

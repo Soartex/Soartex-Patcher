@@ -114,16 +114,15 @@ public class HtmlAccessor {
 				}
 				//save info
 				itemsInfo.add(itemtext);
+				itemsInfoUrl.add(zipurl.toString());
+				//update textbox/loading msg
 				title.setText(" Mod Number: "+(count++));
 				title3.setText("Loading: "+itemtext[0]);
-				itemsInfoUrl.add(zipurl.toString());
 
 				readline = in.readLine();
 			}
 		} catch (final IOException e) {
-
 			e.printStackTrace();
-
 		} 
 
 		Object[][] temp = new Object[itemsInfo.size()][];

@@ -22,7 +22,7 @@ import net.soartex.patcher.helpers.Strings;
 public class Main {
 
 	//#################################
-	final static double VERSION_NUMBER = 1.1;
+	final static double VERSION_NUMBER = 1.2;
 	//#################################
 	
 	public static void main(String[] args) {
@@ -31,7 +31,7 @@ public class Main {
 		UIManager.put("nimbusBase", Color.BLACK);      // Base color
 		UIManager.put("nimbusBlueGrey", Color.GRAY);  // Secondary Color
 		UIManager.put("control", Color.DARK_GRAY);         // Control
-
+		UIManager.put("OptionPane.messageForeground", Color.WHITE); //popups have white text
 		//load new skin
 		try {
 			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
@@ -75,8 +75,9 @@ public class Main {
 			e.printStackTrace();
 			System.out.println("Program could NOT check for updates!");
 		}
-		if(VERSION_NUMBER<Double.parseDouble(readline)){
-			JFrame frame = new JFrame("Updated Avalible");
+		if(VERSION_NUMBER>Double.parseDouble(readline)){
+			final JFrame frame = new JFrame("Updated Avalible");
+			frame.setLocationRelativeTo(Soartex_Patcher.frame);
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 			GridLayout g1 = new GridLayout(3,1);
 			frame.setLayout(g1);
@@ -92,7 +93,7 @@ public class Main {
 				{
 					try {
 						Desktop.getDesktop().browse(new URI( "http://soartex.net/"));
-						System.exit(0);
+						frame.setVisible(false);
 					} catch (Exception e1) {
 						e1.printStackTrace();
 					}

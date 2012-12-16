@@ -21,7 +21,8 @@ public class CellMouse implements MouseListener,MouseMotionListener{
 	    int col = table.columnAtPoint(e.getPoint());	    
 	    //if it is the checkbox colum.
 	    if(col==0){
-	    	Soartex_Patcher.checkBox(row, col);
+	    	Soartex_Patcher.tableData[row][0]= new Boolean(!(Boolean)Soartex_Patcher.tableData[row][0]);
+			table.updateUI();
 	    }		
 	}
 	

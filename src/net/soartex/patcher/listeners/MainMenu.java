@@ -1,13 +1,18 @@
 package net.soartex.patcher.listeners;
 
 import java.awt.Desktop;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URL;
+
+import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 
 import net.soartex.patcher.Patch_Controller;
 import net.soartex.patcher.Soartex_Patcher;
@@ -24,17 +29,39 @@ public class MainMenu implements ActionListener{
 				e1.printStackTrace();
 			}
 		}
-		//hid console
+		//show outdated textures
 		else if(e.getActionCommand().equals(Strings.MENU_DATA[1])){
 			System.out.println("This feature is not implemented yet");
+			//needs to unzip the texture pack
+			//look for the mods.cvs
+			//read in and compare to mods on the table.
+			//if they match see if it is outdated
+			//if it is outdated highlight it
 		}
 		//show last updated
 		else if(e.getActionCommand().equals(Strings.MENU_DATA[2])){
 			System.out.println("This feature is not implemented yet");
+			//get date modify from each mod
+			//compare to a date from 2 weeks ago
+			//if it has been updated, then highlight it
 		}
 		//browse button
 		else if(e.getActionCommand().equals(Strings.MENU_DATA[3])){
-			Soartex_Patcher.browseFiles();
+			JFileChooser fc = new JFileChooser();
+			fc.setPreferredSize(new Dimension(600,600));
+			int returnVal = fc.showOpenDialog(Soartex_Patcher.frame);
+			if (returnVal != JFileChooser.APPROVE_OPTION) return;
+			File chosenFile = fc.getSelectedFile();
+
+			if(chosenFile.getAbsolutePath().endsWith(Strings.ZIP_FILES_EXT.substring(1))){
+				Strings.setModdedZipLocation(chosenFile.getAbsolutePath());
+			}
+			else{
+				// TODO: show error dialog
+				System.out.println("==================");
+				System.out.println("Error: Not a valid file!");
+				System.out.println("==================");
+			}
 		}
 		//patch button
 		else if(e.getActionCommand().equals(Strings.MENU_DATA[4])){
@@ -45,9 +72,11 @@ public class MainMenu implements ActionListener{
 						temp.run();
 					}
 					else{
-						System.out.println("==================");
-						System.out.println("Error: Path not Set!");
-						System.out.println("==================");
+						JOptionPane.showMessageDialog(Soartex_Patcher.frame,
+							    "Your path has not been set to a valid .zip file.",
+							    "Error",
+							    JOptionPane.ERROR_MESSAGE);
+						System.err.println("Error: Path not Set!");
 					}
 				}
 			};

@@ -56,6 +56,7 @@ public class Patch_Controller {
 	public void run(){
 		
 		makeProgressWiondow();
+		Soartex_Patcher.frame.setEnabled(false);
 		
 		title.setText("Compiling New Modlist");
 		aJProgressBar.setValue(0);
@@ -99,6 +100,7 @@ public class Patch_Controller {
 		System.out.println("==================");
 		
 		frame1.setVisible(false);
+		Soartex_Patcher.frame.setEnabled(true);
 	}
 
 	private void downloadModTextures() {
@@ -107,7 +109,13 @@ public class Patch_Controller {
 		new File(Strings.TEMPORARY_DATA_LOCATION_A).mkdirs();
 		new File(Strings.TEMPORARY_DATA_LOCATION_A).deleteOnExit();
 
-		for (String mod: Soartex_Patcher.getCheckedMods()) {
+		ArrayList<String> temp = new ArrayList<String>();
+		for(int i=0; i<Soartex_Patcher.tableData.length;i++){
+			if(Soartex_Patcher.tableData[i][0] != null && (Boolean)Soartex_Patcher.tableData[i][0]){
+				temp.add((String) Soartex_Patcher.tableData[i][1]);
+			}
+		}
+		for (String mod: temp) {
 			try {
 				String tempUrl = Strings.MODDED_URL+ mod.replace(Strings.SPACE, Strings.UNDERSCORE) + Strings.ZIP_FILES_EXT.substring(1);
 				final InputStream in = new URL(tempUrl).openStream();

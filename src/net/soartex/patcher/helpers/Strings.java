@@ -24,7 +24,7 @@ public class Strings {
 	
 	public static final String[] MENU_DATA = {
 		"Soartex Website",
-		"Hide Console",
+		"Show Outdated Textures",
 		"Show Latest Textures",
 		"Browse",
 		"Patch!"};
