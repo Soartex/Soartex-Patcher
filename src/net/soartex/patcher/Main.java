@@ -22,7 +22,7 @@ import net.soartex.patcher.helpers.Strings;
 public class Main {
 
 	//#################################
-	final static double VERSION_NUMBER = 1.0;
+	final static double VERSION_NUMBER = 1.1;
 	//#################################
 	
 	public static void main(String[] args) {
