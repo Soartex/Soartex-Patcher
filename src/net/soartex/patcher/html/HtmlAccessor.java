@@ -68,13 +68,13 @@ public class HtmlAccessor {
 				
 				// TODO: uncomment when done testing
 				//test to see if file is there
-				try {
+				/*try {
 					zipurl.openStream();
 				} catch (final IOException e) {
 					e.printStackTrace();
 					readline = in.readLine();
 					continue;
-				}
+				}*/
 				
 				//add file info
 				final String[] itemtext = new String[5];

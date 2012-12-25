@@ -75,7 +75,7 @@ public class Main {
 			e.printStackTrace();
 			System.out.println("Program could NOT check for updates!");
 		}
-		if(VERSION_NUMBER>Double.parseDouble(readline)){
+		if(VERSION_NUMBER<Double.parseDouble(readline)){
 			final JFrame frame = new JFrame("Updated Avalible");
 			frame.setLocationRelativeTo(Soartex_Patcher.frame);
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

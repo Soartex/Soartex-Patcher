@@ -46,7 +46,7 @@ public class Soartex_Patcher {
 		JFrame frame1 = new JFrame("Loading Patcher Files");
 		GridLayout g1 = new GridLayout(4,1);
 		frame1.setLayout(g1);
-		
+
 		frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		final JProgressBar aJProgressBar = new JProgressBar(JProgressBar.HORIZONTAL);
 		aJProgressBar.setStringPainted(false);
@@ -56,15 +56,15 @@ public class Soartex_Patcher {
 		JLabel title = new JLabel("Please Wait While We Load Your Files", JLabel.CENTER);
 		title.setForeground(Color.white);
 		frame1.add(title);
-		
-		JLabel title2 = new JLabel("", JLabel.CENTER);
+
+		JLabel title2 = new JLabel("Loading mod table info", JLabel.CENTER);
 		title2.setForeground(Color.white);
 		frame1.add(title2);
-		
+
 		JLabel title3 = new JLabel("", JLabel.CENTER);
 		title3.setForeground(Color.white);
 		frame1.add(title3);
-		
+
 		frame1.setIconImage(frame.getIconImage());
 		frame1.setSize(300, 100);
 		frame1.setResizable(false);
@@ -127,17 +127,28 @@ public class Soartex_Patcher {
 
 		menu.addSeparator();
 
-		//hide console
+		//highlighted parts
+		ButtonGroup group = new ButtonGroup();
 		JCheckBoxMenuItem cbMenuItem = new JCheckBoxMenuItem(Strings.MENU_DATA[1]);
 		cbMenuItem.addActionListener(new MainMenu());
 		cbMenuItem.setForeground(Color.white);
+		cbMenuItem.setSelected(true);
 		menu.add(cbMenuItem);
+		group.add(cbMenuItem);
 
-		//show lastest updated
+		//show outdated textures
 		cbMenuItem = new JCheckBoxMenuItem(Strings.MENU_DATA[2]);
 		cbMenuItem.addActionListener(new MainMenu());
 		cbMenuItem.setForeground(Color.white);
 		menu.add(cbMenuItem);
+		group.add(cbMenuItem);
+
+		//show lastest updated
+		cbMenuItem = new JCheckBoxMenuItem(Strings.MENU_DATA[3]);
+		cbMenuItem.addActionListener(new MainMenu());
+		cbMenuItem.setForeground(Color.white);
+		menu.add(cbMenuItem);
+		group.add(cbMenuItem);
 
 		//Make second menu for packs
 		menu = new JMenu("Pack");
@@ -147,7 +158,7 @@ public class Soartex_Patcher {
 		HtmlAccessor.getPackData();
 
 		//add the packs
-		ButtonGroup group = new ButtonGroup();
+		group = new ButtonGroup();
 		JRadioButtonMenuItem rbMenuItem;
 		for(String temp : Strings.PACK_TITLES){
 			rbMenuItem = new JRadioButtonMenuItem(temp);
@@ -181,14 +192,14 @@ public class Soartex_Patcher {
 		menuBar.add(Box.createHorizontalGlue());
 		menu = new JMenu("Patch");
 		menu.setForeground(Color.white);
-		menuItem = new JMenuItem(Strings.MENU_DATA[3]);
+		menuItem = new JMenuItem(Strings.MENU_DATA[4]);
 		menuItem.addActionListener(new MainMenu());
 		menuItem.setForeground(Color.white);
 		menu.add(menuItem);
 
 		menu.addSeparator();
 
-		menuItem = new JMenuItem(Strings.MENU_DATA[4]);
+		menuItem = new JMenuItem(Strings.MENU_DATA[5]);
 		menuItem.addActionListener(new MainMenu());
 		menuItem.setForeground(Color.white);
 		menu.add(menuItem);

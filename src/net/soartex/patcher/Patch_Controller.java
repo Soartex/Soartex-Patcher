@@ -3,9 +3,13 @@ package net.soartex.patcher;
 import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.Toolkit;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.InputStream;
+import java.io.PrintWriter;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -23,7 +27,7 @@ public class Patch_Controller {
 	JLabel title;
 	JProgressBar aJProgressBar;
 	JFrame frame1;
-	
+
 	public Patch_Controller(String path){
 		zipLocation=path;
 	}
@@ -32,7 +36,7 @@ public class Patch_Controller {
 		frame1 = new JFrame("Patching");
 		GridLayout g1 = new GridLayout(2,1);
 		frame1.setLayout(g1);
-		
+
 		frame1.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		aJProgressBar = new JProgressBar(JProgressBar.HORIZONTAL);
 		aJProgressBar.setStringPainted(true);
@@ -52,19 +56,19 @@ public class Patch_Controller {
 		frame1.setLocationRelativeTo(Soartex_Patcher.frame);
 		frame1.setVisible(true);
 	}
-	
+
 	public void run(){
-		
+
 		makeProgressWiondow();
 		Soartex_Patcher.frame.setEnabled(false);
-		
-		title.setText("Compiling New Modlist");
+
+		title.setText("Extracting Main Zip");
 		aJProgressBar.setValue(0);
 		System.out.println("==================");
-		System.out.println("Compiling New Modlist");
+		System.out.println("Extracting Main Zip");
 		System.out.println("==================");
-		makeNewCSVFile();		
-		
+		extractTexturePack();
+
 		title.setText("Downloading Mods");
 		aJProgressBar.setValue(20);
 		System.out.println("==================");
@@ -72,12 +76,12 @@ public class Patch_Controller {
 		System.out.println("==================");
 		downloadModTextures();
 
-		title.setText("Extracting Main Zip");
+		title.setText("Compiling New Modlist");
 		aJProgressBar.setValue(40);
 		System.out.println("==================");
-		System.out.println("Extracting Main Zip");
+		System.out.println("Compiling New Modlist");
 		System.out.println("==================");
-		extractTexturePack();
+		makeNewCSVFile();
 
 		title.setText("Extracting Mods");
 		aJProgressBar.setValue(60);
@@ -85,7 +89,7 @@ public class Patch_Controller {
 		System.out.println("Extracting Mods");
 		System.out.println("==================");
 		extractModTextures();
-		
+
 		title.setText("Compiling");
 		aJProgressBar.setValue(80);
 		System.out.println("==================");
@@ -98,7 +102,7 @@ public class Patch_Controller {
 		System.out.println("==================");
 		System.out.println("Done!");
 		System.out.println("==================");
-		
+
 		frame1.setVisible(false);
 		Soartex_Patcher.frame.setEnabled(true);
 	}
@@ -147,7 +151,55 @@ public class Patch_Controller {
 
 	// TODO: add this method to keep track of ods added
 	private void makeNewCSVFile() {
-		// TODO Auto-generated method stub
+		try{
+			File export = new File(Strings.TEMPORARY_DATA_LOCATION_B + File.separator +Strings.MODTABLE_EXPORT);
+			System.out.println(export.getAbsolutePath());
+			FileWriter fw = new FileWriter(export);
+			PrintWriter pw = new PrintWriter(fw);
+			try {
+				ArrayList<String[]> data = new ArrayList<String[]>();
+				BufferedReader in = new BufferedReader(new FileReader(Strings.TEMPORARY_DATA_LOCATION_B+ File.separator +Strings.MODTABLE_EXPORT));
+				String readline = in.readLine();
+				while (readline != null) {
+
+					//add file info
+					String[] text = new String[2];
+					text[0] = readline.split(Strings.COMMA)[0];
+					text[1] = readline.split(Strings.COMMA)[1];
+					data.add(text);
+
+					readline = in.readLine();
+				}
+				/*for(int i=0; i<Soartex_Patcher.tableData.length;i++){
+					for(int z =0; z<temp.size();z++){
+						pw.print(temp.get(z));
+						pw.print(",");
+					}
+					pw.print("\n");
+				}*/
+			}
+			catch(Exception e){
+				e.printStackTrace();
+			}
+
+			for(int i=0; i<Soartex_Patcher.tableData.length;i++){
+				if(Soartex_Patcher.tableData[i][0] != null && (Boolean)Soartex_Patcher.tableData[i][0]){
+					ArrayList<String> temp = new ArrayList<String>();
+					temp.add((String) Soartex_Patcher.tableData[i][1]);
+					temp.add((String) Soartex_Patcher.tableData[i][5]);
+					for(int z =0; z<temp.size();z++){
+						pw.print(temp.get(z));
+						pw.print(",");
+					}
+					pw.print("\n");
+				}
+			}
+			pw.flush();
+			pw.close();
+			fw.close();
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 
 	}
 

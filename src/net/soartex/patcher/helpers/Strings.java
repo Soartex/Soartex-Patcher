@@ -24,8 +24,9 @@ public class Strings {
 	
 	public static final String[] MENU_DATA = {
 		"Soartex Website",
+		"None",
 		"Show Outdated Textures",
-		"Show Latest Textures",
+		"Show Recent Textures",
 		"Browse",
 		"Patch!"};
 
@@ -41,6 +42,8 @@ public class Strings {
 	public static ArrayList<String> PACK_URLS = new ArrayList<String>();
 	
 	//Final Variables
+	public static final String MODTABLE_EXPORT ="installedMods.csv";
+	
 	public static final String COMMA = ",";
 	public static final String SPACE = " ";
 	public static final String UNDERSCORE = "_";
