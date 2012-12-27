@@ -253,6 +253,7 @@ public class MainMenu implements ActionListener{
 		Patch_Controller.delete(new File(Strings.TEMPORARY_DATA_LOCATION_B));
 		UnZip.unZipIt(Strings.MODDEDZIP_LOCATION, Strings.TEMPORARY_DATA_LOCATION_B);	
 		ArrayList<Integer> rows = new ArrayList<Integer>();
+		ArrayList<Integer> rows1 = new ArrayList<Integer>();
 		try {
 			ArrayList<String[]> data = new ArrayList<String[]>();
 			BufferedReader in = new BufferedReader(new FileReader(Strings.TEMPORARY_DATA_LOCATION_B+ File.separator +Strings.MODTABLE_EXPORT));
@@ -275,10 +276,14 @@ public class MainMenu implements ActionListener{
 				for(int i=0; i<Soartex_Patcher.tableData.length;i++){
 					try {
 						Date modDate = formatter.parse((String)Soartex_Patcher.tableData[i][5] );
-						if(((String)Soartex_Patcher.tableData[i][1]).equals(data.get(j)[0]) && modDate.after(oldDate)){
-							rows.add(i);
-							System.out.println("Outdated: "+data.get(j)[0]);
-							break;
+						if(((String)Soartex_Patcher.tableData[i][1]).equals(data.get(j)[0])){
+							if(modDate.after(oldDate)){
+								rows.add(i);
+								System.out.println("Outdated: "+data.get(j)[0]);
+							}
+							else{
+								rows1.add(i);
+							}
 						}
 					} catch (ParseException e1) {
 						System.out.println("Program could NOT get list of installed mods!");
@@ -289,7 +294,7 @@ public class MainMenu implements ActionListener{
 		catch(Exception e1){
 			System.out.println("Program could NOT get list of installed mods!");
 		}
-		HighlightCell tableRender = new HighlightCell(rows, Color.RED);
+		HighlightCell tableRender = new HighlightCell(rows, rows1, Color.RED, Color.ORANGE);
 		Soartex_Patcher.table.getColumnModel().getColumn(1).setCellRenderer(tableRender);
 		Soartex_Patcher.table.updateUI();
 		Patch_Controller.delete(new File(Strings.TEMPORARY_DATA_LOCATION_B));
