@@ -11,7 +11,9 @@ import java.io.FileWriter;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.URL;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -152,12 +154,9 @@ public class Patch_Controller {
 	// TODO: add this method to keep track of ods added
 	private void makeNewCSVFile() {
 		try{
-			File export = new File(Strings.TEMPORARY_DATA_LOCATION_B + File.separator +Strings.MODTABLE_EXPORT);
-			System.out.println(export.getAbsolutePath());
-			FileWriter fw = new FileWriter(export);
-			PrintWriter pw = new PrintWriter(fw);
+			//old modTable
+			ArrayList<String[]> data = new ArrayList<String[]>();
 			try {
-				ArrayList<String[]> data = new ArrayList<String[]>();
 				BufferedReader in = new BufferedReader(new FileReader(Strings.TEMPORARY_DATA_LOCATION_B+ File.separator +Strings.MODTABLE_EXPORT));
 				String readline = in.readLine();
 				while (readline != null) {
@@ -170,37 +169,66 @@ public class Patch_Controller {
 
 					readline = in.readLine();
 				}
-				/*for(int i=0; i<Soartex_Patcher.tableData.length;i++){
-					for(int z =0; z<temp.size();z++){
-						pw.print(temp.get(z));
-						pw.print(",");
-					}
-					pw.print("\n");
-				}*/
 			}
 			catch(Exception e){
+				System.out.println("No Old Mod Table");
+			}
+			//selected mods
+			ArrayList<String[]> data2 = new ArrayList<String[]>();
+			for(int i=0; i<Soartex_Patcher.tableData.length;i++){
+				//if selected on the table add the name and datemodified
+				if(Soartex_Patcher.tableData[i][0] != null && (Boolean)Soartex_Patcher.tableData[i][0]){
+					String[] text = new String[2];
+					text[0] = (String) Soartex_Patcher.tableData[i][1];
+					text[1] = (String) Soartex_Patcher.tableData[i][5];
+					data2.add(text);
+				}
+			}
+
+			//combine the 2 sets of data
+			ArrayList<String[]> finalData = new ArrayList<String[]>();
+			SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyy");  
+			for(int i=0;i<data2.size(); i++){
+				String[] temp = data2.get(i);
+				
+				for(int z=0;z<data.size(); z++){
+					if(data2.get(i)[0].equals(data.get(z)[0])){
+						Date oldFile = formatter.parse(data.get(z)[1]);
+						Date selectedMod = formatter.parse(data2.get(i)[1]);
+						if(oldFile.after(selectedMod)){
+							temp=data.remove(z);
+							break;
+						}
+					}
+				}//innner
+				System.out.println("Added "+temp[0]+" | "+temp[1]);
+				finalData.add(temp);
+			}//outer
+			
+			//write the file out
+			try{
+				new File(Strings.TEMPORARY_DATA_LOCATION_B+ File.separator +Strings.MODTABLE_EXPORT).getParentFile().mkdirs();
+				File export = new File(Strings.TEMPORARY_DATA_LOCATION_B+ File.separator +Strings.MODTABLE_EXPORT);
+				System.out.println(export.getAbsolutePath());
+				FileWriter fw = new FileWriter(export);
+				PrintWriter pw = new PrintWriter(fw);
+				for (String[] temp : finalData) {
+					pw.print(temp[0]);
+					pw.print(",");
+					pw.print(temp[1]);
+					pw.print(",");
+					pw.print("\n");
+				}
+				pw.flush();
+				pw.close();
+				fw.close();
+			}catch(Exception e){
 				e.printStackTrace();
 			}
 
-			for(int i=0; i<Soartex_Patcher.tableData.length;i++){
-				if(Soartex_Patcher.tableData[i][0] != null && (Boolean)Soartex_Patcher.tableData[i][0]){
-					ArrayList<String> temp = new ArrayList<String>();
-					temp.add((String) Soartex_Patcher.tableData[i][1]);
-					temp.add((String) Soartex_Patcher.tableData[i][5]);
-					for(int z =0; z<temp.size();z++){
-						pw.print(temp.get(z));
-						pw.print(",");
-					}
-					pw.print("\n");
-				}
-			}
-			pw.flush();
-			pw.close();
-			fw.close();
 		}catch(Exception e){
 			e.printStackTrace();
 		}
-
 	}
 
 	private void extractModTextures() {
@@ -241,7 +269,7 @@ public class Patch_Controller {
 
 	}
 
-	private static void delete (final File f) {
+	public static void delete (final File f) {
 
 		f.delete();
 

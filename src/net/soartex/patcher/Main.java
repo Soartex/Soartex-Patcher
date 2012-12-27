@@ -72,8 +72,6 @@ public class Main {
 			readline = in.readLine();		
 		} catch (Exception e) {
 			System.out.println("Program could NOT check for updates!");
-			e.printStackTrace();
-			System.out.println("Program could NOT check for updates!");
 		}
 		if(VERSION_NUMBER<Double.parseDouble(readline)){
 			final JFrame frame = new JFrame("Updated Avalible");
@@ -94,11 +92,24 @@ public class Main {
 					try {
 						Desktop.getDesktop().browse(new URI( "http://soartex.net/"));
 						frame.setVisible(false);
+						Soartex_Patcher.frame.setEnabled(true);
 					} catch (Exception e1) {
 						e1.printStackTrace();
 					}
 				}
-			});      
+			});  
+			JButton button2 = new JButton("Ignore");
+			button2.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e)
+				{
+					try {
+						frame.setVisible(false);
+						Soartex_Patcher.frame.setEnabled(true);
+					} catch (Exception e1) {
+						e1.printStackTrace();
+					}
+				}
+			});
 			frame.add(title, BorderLayout.NORTH);
 			frame.add(title2);
 			frame.add(button1);
@@ -106,6 +117,8 @@ public class Main {
 			frame.setResizable(false);
 			frame.setFocusableWindowState(true);
 			frame.setVisible(true);
+			
+			Soartex_Patcher.frame.setEnabled(false);
 		}	
 
 	}

@@ -1,8 +1,10 @@
 package net.soartex.patcher.listeners;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Desktop;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -19,7 +21,10 @@ import java.util.Calendar;
 import java.util.Date;
 
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JProgressBar;
 
 import net.soartex.patcher.Patch_Controller;
 import net.soartex.patcher.Soartex_Patcher;
@@ -49,58 +54,52 @@ public class MainMenu implements ActionListener{
 		}
 		//show outdated textures
 		else if(e.getActionCommand().equals(Strings.MENU_DATA[2])){
-			if(!Strings.MODDEDZIP_LOCATION.equals("")){
-				UnZip.unZipIt(Strings.MODDEDZIP_LOCATION, Strings.TEMPORARY_DATA_LOCATION_B);	
-				try {
-					ArrayList<String[]> data = new ArrayList<String[]>();
-					BufferedReader in = new BufferedReader(new FileReader(Strings.TEMPORARY_DATA_LOCATION_B+ File.separator +Strings.MODTABLE_EXPORT));
-					String readline = in.readLine();
-					while (readline != null) {
-
-						//add file info
-						String[] text = new String[2];
-						text[0] = readline.split(Strings.COMMA)[0];
-						text[1] = readline.split(Strings.COMMA)[1];
-						data.add(text);
-
-						readline = in.readLine();
+			Thread thread = new Thread(){
+				public void run(){
+					if(!Strings.MODDEDZIP_LOCATION.equals("")){
+						//info for user
+						final JFrame frame = new JFrame("Loading");
+						frame.setLocationRelativeTo(Soartex_Patcher.frame);
+						frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+						GridLayout g1 = new GridLayout(3,1);
+						frame.setLayout(g1);
+						JLabel title = new JLabel("Please Wait We Are", JLabel.CENTER);
+						title.setForeground(Color.white);
+						JLabel title2 = new JLabel("Compiling Your List", JLabel.CENTER);
+						title2.setForeground(Color.white);
+						
+						final JProgressBar aJProgressBar = new JProgressBar(JProgressBar.HORIZONTAL);
+						aJProgressBar.setStringPainted(false);
+						aJProgressBar.setIndeterminate(true);
+						
+						frame.add(title, BorderLayout.NORTH);
+						frame.add(title2);
+						frame.add(aJProgressBar, BorderLayout.SOUTH);
+						frame.setSize(200, 100);
+						frame.setResizable(false);
+						frame.setFocusableWindowState(true);
+						frame.setVisible(true);
+						
+						Soartex_Patcher.frame.setEnabled(false);
+						//get the old mods
+						getOldMods();
+						
+						//disable frame
+						Soartex_Patcher.frame.setEnabled(true);
+						frame.setVisible(false);
 					}
-
-					//compare dates
-					ArrayList<Integer> rows = new ArrayList<Integer>();
-					for(int j=0; j<data.size();j++){
-						SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyy");  
-						Date oldDate = formatter.parse(data.get(j)[1]);
-						for(int i=0; i<Soartex_Patcher.tableData.length;i++){
-							try {
-								Date modDate = formatter.parse((String)Soartex_Patcher.tableData[i][5] );
-								if(((String)Soartex_Patcher.tableData[i][1]).equals(data.get(j)[0]) && modDate.after(oldDate)){
-									rows.add(i);
-									System.out.println("Added:"+data.get(j)[0]);
-									break;
-								}
-							} catch (ParseException e1) {
-								e1.printStackTrace();
-							}
-						}
+					else{
+						JOptionPane.showMessageDialog(Soartex_Patcher.frame,
+								"Please select a valid soartex texture pack .zip",
+								"Error",
+								JOptionPane.ERROR_MESSAGE);
+						System.err.println("Error: nonvalid .zip");
+						
 					}
-					System.out.println(rows.toString());
-					HighlightCell tableRender = new HighlightCell(rows, Color.red);
-					Soartex_Patcher.table.getColumnModel().getColumn(1).setCellRenderer(tableRender);
-					Soartex_Patcher.table.updateUI();
 				}
-				catch(Exception e1){
-					e1.printStackTrace();
-				}
-			}
-			else{
-				JOptionPane.showMessageDialog(Soartex_Patcher.frame,
-						"Please select a valid soartex texture pack .zip",
-						"Error",
-						JOptionPane.ERROR_MESSAGE);
-				System.err.println("Error: nonvalid .zip");
-				
-			}
+			};
+			thread.start();
+			
 		}
 		//show last updated
 		else if(e.getActionCommand().equals(Strings.MENU_DATA[3])){
@@ -212,4 +211,49 @@ public class MainMenu implements ActionListener{
 		}
 	}
 
+	
+	private void getOldMods(){
+		UnZip.unZipIt(Strings.MODDEDZIP_LOCATION, Strings.TEMPORARY_DATA_LOCATION_B);	
+		try {
+			ArrayList<String[]> data = new ArrayList<String[]>();
+			BufferedReader in = new BufferedReader(new FileReader(Strings.TEMPORARY_DATA_LOCATION_B+ File.separator +Strings.MODTABLE_EXPORT));
+			String readline = in.readLine();
+			while (readline != null) {
+
+				//add file info
+				String[] text = new String[2];
+				text[0] = readline.split(Strings.COMMA)[0];
+				text[1] = readline.split(Strings.COMMA)[1];
+				data.add(text);
+
+				readline = in.readLine();
+			}
+
+			//compare dates
+			ArrayList<Integer> rows = new ArrayList<Integer>();
+			for(int j=0; j<data.size();j++){
+				SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyy");  
+				Date oldDate = formatter.parse(data.get(j)[1]);
+				for(int i=0; i<Soartex_Patcher.tableData.length;i++){
+					try {
+						Date modDate = formatter.parse((String)Soartex_Patcher.tableData[i][5] );
+						if(((String)Soartex_Patcher.tableData[i][1]).equals(data.get(j)[0]) && modDate.after(oldDate)){
+							rows.add(i);
+							System.out.println("Added:"+data.get(j)[0]);
+							break;
+						}
+					} catch (ParseException e1) {
+						System.out.println("Program could NOT get list of installed mods!");
+					}
+				}
+			}
+			HighlightCell tableRender = new HighlightCell(rows, Color.red);
+			Soartex_Patcher.table.getColumnModel().getColumn(1).setCellRenderer(tableRender);
+			Soartex_Patcher.table.updateUI();
+			Patch_Controller.delete(new File(Strings.TEMPORARY_DATA_LOCATION_B));
+		}
+		catch(Exception e1){
+			System.out.println("Program could NOT get list of installed mods!");
+		}
+	}
 }
