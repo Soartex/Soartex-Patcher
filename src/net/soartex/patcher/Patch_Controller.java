@@ -157,6 +157,7 @@ public class Patch_Controller {
 			//old modTable
 			ArrayList<String[]> data = new ArrayList<String[]>();
 			try {
+				@SuppressWarnings("resource")
 				BufferedReader in = new BufferedReader(new FileReader(Strings.TEMPORARY_DATA_LOCATION_B+ File.separator +Strings.MODTABLE_EXPORT));
 				String readline = in.readLine();
 				while (readline != null) {

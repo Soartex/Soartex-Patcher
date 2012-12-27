@@ -12,6 +12,8 @@ import net.soartex.patcher.helpers.Strings;
 import net.soartex.patcher.html.HtmlAccessor;
 import net.soartex.patcher.listeners.CellMouse;
 import net.soartex.patcher.listeners.MainMenu;
+import net.soartex.patcher.listeners.Packs;
+import net.soartex.patcher.listeners.Patch;
 
 public class Soartex_Patcher {
 
@@ -149,6 +151,16 @@ public class Soartex_Patcher {
 		cbMenuItem.setForeground(Color.white);
 		menu.add(cbMenuItem);
 		group.add(cbMenuItem);
+		
+		menu.addSeparator();
+		
+		//refresh
+		menuItem = new JMenuItem("Refresh");
+		menuItem.addActionListener(new MainMenu());
+		menuItem.setForeground(Color.white);
+		menu.add(menuItem);
+
+		
 
 		//Make second menu for packs
 		menu = new JMenu("Pack");
@@ -163,7 +175,7 @@ public class Soartex_Patcher {
 		for(String temp : Strings.PACK_TITLES){
 			rbMenuItem = new JRadioButtonMenuItem(temp);
 			rbMenuItem.setSelected(false);
-			rbMenuItem.addActionListener(new MainMenu());
+			rbMenuItem.addActionListener(new Packs());
 			rbMenuItem.setForeground(Color.white);
 			group.add(rbMenuItem);
 			menu.add(rbMenuItem);
@@ -173,7 +185,7 @@ public class Soartex_Patcher {
 		menu.addSeparator();
 		rbMenuItem = new JRadioButtonMenuItem("Select All");
 		rbMenuItem.setSelected(false);
-		rbMenuItem.addActionListener(new MainMenu());
+		rbMenuItem.addActionListener(new Packs());
 		rbMenuItem.setForeground(Color.white);
 		group.add(rbMenuItem);
 		menu.add(rbMenuItem);
@@ -181,7 +193,7 @@ public class Soartex_Patcher {
 
 		rbMenuItem = new JRadioButtonMenuItem("Select None");
 		rbMenuItem.setSelected(true);
-		rbMenuItem.addActionListener(new MainMenu());
+		rbMenuItem.addActionListener(new Packs());
 		rbMenuItem.setForeground(Color.white);
 		group.add(rbMenuItem);
 		menu.add(rbMenuItem);
@@ -193,14 +205,14 @@ public class Soartex_Patcher {
 		menu = new JMenu("Patch");
 		menu.setForeground(Color.white);
 		menuItem = new JMenuItem(Strings.MENU_DATA[4]);
-		menuItem.addActionListener(new MainMenu());
+		menuItem.addActionListener(new Patch());
 		menuItem.setForeground(Color.white);
 		menu.add(menuItem);
 
 		menu.addSeparator();
 
 		menuItem = new JMenuItem(Strings.MENU_DATA[5]);
-		menuItem.addActionListener(new MainMenu());
+		menuItem.addActionListener(new Patch());
 		menuItem.setForeground(Color.white);
 		menu.add(menuItem);
 

@@ -2,20 +2,19 @@ package net.soartex.patcher.listeners;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Desktop;
+import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.net.URI;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -27,34 +26,25 @@ import net.soartex.patcher.helpers.HighlightCell;
 import net.soartex.patcher.helpers.Strings;
 import net.soartex.patcher.helpers.UnZip;
 
-public class MainMenu implements ActionListener{
+public class Patch implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		//soartex website
-		if(e.getActionCommand().equals(Strings.MENU_DATA[0])){
-			try {
-				Desktop.getDesktop().browse(new URI( "http://soartex.net/"));
-			} catch (Exception e1) {
-				e1.printStackTrace();
-			}
-		}
-		//none
-		else if(e.getActionCommand().equals(Strings.MENU_DATA[1])){
-			HighlightCell temp = new HighlightCell(new ArrayList<Integer>(), Color.black);
-			Soartex_Patcher.table.getColumnModel().getColumn(1).setCellRenderer(temp);
-			Soartex_Patcher.table.getColumnModel().getColumn(2).setCellRenderer(temp);
-			Soartex_Patcher.table.getColumnModel().getColumn(3).setCellRenderer(temp);
-			Soartex_Patcher.table.getColumnModel().getColumn(4).setCellRenderer(temp);
-			Soartex_Patcher.table.getColumnModel().getColumn(5).setCellRenderer(temp);
-			Soartex_Patcher.table.updateUI();
-		}
-		//show outdated textures
-		else if(e.getActionCommand().equals(Strings.MENU_DATA[2])){
-			Thread thread = new Thread(){
-				public void run(){
-					if(!Strings.MODDEDZIP_LOCATION.equals("")){
+		//browse button
+		if(e.getActionCommand().equals(Strings.MENU_DATA[4])){
+			JFileChooser fc = new JFileChooser();
+			fc.setPreferredSize(new Dimension(600,600));
+			int returnVal = fc.showOpenDialog(Soartex_Patcher.frame);
+			if (returnVal != JFileChooser.APPROVE_OPTION) return;
+			File chosenFile = fc.getSelectedFile();
+
+			if(chosenFile.getAbsolutePath().endsWith(Strings.ZIP_FILES_EXT.substring(1))){
+				Strings.setModdedZipLocation(chosenFile.getAbsolutePath());
+				//show old mods if possible
+				Thread thread = new Thread(){
+					public void run(){
 						//info for user
+						System.out.println("\nFinding Installed Mod Table");
 						final JFrame frame = new JFrame("Loading");
 						frame.setLocationRelativeTo(Soartex_Patcher.frame);
 						frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
@@ -62,7 +52,7 @@ public class MainMenu implements ActionListener{
 						frame.setLayout(g1);
 						JLabel title = new JLabel("Please Wait We Are", JLabel.CENTER);
 						title.setForeground(Color.white);
-						JLabel title2 = new JLabel("Compiling Your List", JLabel.CENTER);
+						JLabel title2 = new JLabel("Finding Your List", JLabel.CENTER);
 						title2.setForeground(Color.white);
 
 						final JProgressBar aJProgressBar = new JProgressBar(JProgressBar.HORIZONTAL);
@@ -85,51 +75,38 @@ public class MainMenu implements ActionListener{
 						Soartex_Patcher.frame.setEnabled(true);
 						frame.setVisible(false);
 					}
+				};
+				thread.start();
+			}
+			else{
+				JOptionPane.showMessageDialog(Soartex_Patcher.frame,
+						"Not a valid .zip",
+						"Error",
+						JOptionPane.ERROR_MESSAGE);
+				System.err.println("Error: Not a valid .zip");
+			}
+		}
+		//patch button
+		else if(e.getActionCommand().equals(Strings.MENU_DATA[5])){
+			Thread thread = new Thread(){
+				public void run(){
+					if(!Strings.MODDEDZIP_LOCATION.equals("")){
+						Patch_Controller temp= new Patch_Controller(Strings.MODDEDZIP_LOCATION);
+						temp.run();
+					}
 					else{
 						JOptionPane.showMessageDialog(Soartex_Patcher.frame,
-								"Please select a valid soartex texture pack .zip",
+								"Your path has not been set to a valid .zip file.",
 								"Error",
 								JOptionPane.ERROR_MESSAGE);
-						System.err.println("Error: nonvalid .zip");
-
+						System.err.println("Error: Path not Set!");
 					}
 				}
 			};
 			thread.start();
-
-		}
-		//show last updated
-		else if(e.getActionCommand().equals(Strings.MENU_DATA[3])){
-			ArrayList<Integer> rows = new ArrayList<Integer>();
-			Calendar twoWeeks = Calendar.getInstance(); // current date/time
-			twoWeeks.add(Calendar.DATE, -14);
-
-			for(int i=0; i<Soartex_Patcher.tableData.length;i++){
-
-				//convert date and compare
-				SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyy");  
-				try {
-					Date modDate = formatter.parse((String)Soartex_Patcher.tableData[i][5] );
-					if(modDate.after(twoWeeks.getTime())){
-						rows.add(i);
-					}
-				} catch (ParseException e1) {
-					e1.printStackTrace();
-				}
-			}
-
-			HighlightCell tableRender = new HighlightCell(rows, Color.red);
-			Soartex_Patcher.table.getColumnModel().getColumn(1).setCellRenderer(tableRender);
-			Soartex_Patcher.table.updateUI();
-		}
-		//refresh mod list
-		else if(e.getActionCommand().equals("Refresh")){
-			System.out.println("Hey! This doesn't work yet!");
 		}
 	}
-
-
-
+	
 	private void getOldMods(){
 		Patch_Controller.delete(new File(Strings.TEMPORARY_DATA_LOCATION_B));
 		UnZip.unZipIt(Strings.MODDEDZIP_LOCATION, Strings.TEMPORARY_DATA_LOCATION_B);	
