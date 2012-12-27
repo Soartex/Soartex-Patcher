@@ -67,11 +67,11 @@ public class MainMenu implements ActionListener{
 						title.setForeground(Color.white);
 						JLabel title2 = new JLabel("Compiling Your List", JLabel.CENTER);
 						title2.setForeground(Color.white);
-						
+
 						final JProgressBar aJProgressBar = new JProgressBar(JProgressBar.HORIZONTAL);
 						aJProgressBar.setStringPainted(false);
 						aJProgressBar.setIndeterminate(true);
-						
+
 						frame.add(title, BorderLayout.NORTH);
 						frame.add(title2);
 						frame.add(aJProgressBar, BorderLayout.SOUTH);
@@ -79,11 +79,11 @@ public class MainMenu implements ActionListener{
 						frame.setResizable(false);
 						frame.setFocusableWindowState(true);
 						frame.setVisible(true);
-						
+
 						Soartex_Patcher.frame.setEnabled(false);
 						//get the old mods
 						getOldMods();
-						
+
 						//disable frame
 						Soartex_Patcher.frame.setEnabled(true);
 						frame.setVisible(false);
@@ -94,12 +94,12 @@ public class MainMenu implements ActionListener{
 								"Error",
 								JOptionPane.ERROR_MESSAGE);
 						System.err.println("Error: nonvalid .zip");
-						
+
 					}
 				}
 			};
 			thread.start();
-			
+
 		}
 		//show last updated
 		else if(e.getActionCommand().equals(Strings.MENU_DATA[3])){
@@ -135,6 +135,43 @@ public class MainMenu implements ActionListener{
 
 			if(chosenFile.getAbsolutePath().endsWith(Strings.ZIP_FILES_EXT.substring(1))){
 				Strings.setModdedZipLocation(chosenFile.getAbsolutePath());
+				//show old mods if possible
+				Thread thread = new Thread(){
+					public void run(){
+						//info for user
+						System.out.println("\nFinding Installed Mod Table");
+						final JFrame frame = new JFrame("Loading");
+						frame.setLocationRelativeTo(Soartex_Patcher.frame);
+						frame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+						GridLayout g1 = new GridLayout(3,1);
+						frame.setLayout(g1);
+						JLabel title = new JLabel("Please Wait We Are", JLabel.CENTER);
+						title.setForeground(Color.white);
+						JLabel title2 = new JLabel("Finding Your List", JLabel.CENTER);
+						title2.setForeground(Color.white);
+
+						final JProgressBar aJProgressBar = new JProgressBar(JProgressBar.HORIZONTAL);
+						aJProgressBar.setStringPainted(false);
+						aJProgressBar.setIndeterminate(true);
+
+						frame.add(title, BorderLayout.NORTH);
+						frame.add(title2);
+						frame.add(aJProgressBar, BorderLayout.SOUTH);
+						frame.setSize(200, 100);
+						frame.setResizable(false);
+						frame.setFocusableWindowState(true);
+						frame.setVisible(true);
+
+						Soartex_Patcher.frame.setEnabled(false);
+						//get the old mods
+						getOldMods();
+
+						//disable frame
+						Soartex_Patcher.frame.setEnabled(true);
+						frame.setVisible(false);
+					}
+				};
+				thread.start();
 			}
 			else{
 				JOptionPane.showMessageDialog(Soartex_Patcher.frame,
@@ -211,9 +248,11 @@ public class MainMenu implements ActionListener{
 		}
 	}
 
-	
+
 	private void getOldMods(){
+		Patch_Controller.delete(new File(Strings.TEMPORARY_DATA_LOCATION_B));
 		UnZip.unZipIt(Strings.MODDEDZIP_LOCATION, Strings.TEMPORARY_DATA_LOCATION_B);	
+		ArrayList<Integer> rows = new ArrayList<Integer>();
 		try {
 			ArrayList<String[]> data = new ArrayList<String[]>();
 			BufferedReader in = new BufferedReader(new FileReader(Strings.TEMPORARY_DATA_LOCATION_B+ File.separator +Strings.MODTABLE_EXPORT));
@@ -228,9 +267,8 @@ public class MainMenu implements ActionListener{
 
 				readline = in.readLine();
 			}
-
+			in.close();
 			//compare dates
-			ArrayList<Integer> rows = new ArrayList<Integer>();
 			for(int j=0; j<data.size();j++){
 				SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyy");  
 				Date oldDate = formatter.parse(data.get(j)[1]);
@@ -239,7 +277,7 @@ public class MainMenu implements ActionListener{
 						Date modDate = formatter.parse((String)Soartex_Patcher.tableData[i][5] );
 						if(((String)Soartex_Patcher.tableData[i][1]).equals(data.get(j)[0]) && modDate.after(oldDate)){
 							rows.add(i);
-							System.out.println("Added:"+data.get(j)[0]);
+							System.out.println("Outdated: "+data.get(j)[0]);
 							break;
 						}
 					} catch (ParseException e1) {
@@ -247,13 +285,13 @@ public class MainMenu implements ActionListener{
 					}
 				}
 			}
-			HighlightCell tableRender = new HighlightCell(rows, Color.red);
-			Soartex_Patcher.table.getColumnModel().getColumn(1).setCellRenderer(tableRender);
-			Soartex_Patcher.table.updateUI();
-			Patch_Controller.delete(new File(Strings.TEMPORARY_DATA_LOCATION_B));
 		}
 		catch(Exception e1){
 			System.out.println("Program could NOT get list of installed mods!");
 		}
+		HighlightCell tableRender = new HighlightCell(rows, Color.RED);
+		Soartex_Patcher.table.getColumnModel().getColumn(1).setCellRenderer(tableRender);
+		Soartex_Patcher.table.updateUI();
+		Patch_Controller.delete(new File(Strings.TEMPORARY_DATA_LOCATION_B));
 	}
 }

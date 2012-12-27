@@ -129,7 +129,7 @@ public class Soartex_Patcher {
 
 		//highlighted parts
 		ButtonGroup group = new ButtonGroup();
-		JCheckBoxMenuItem cbMenuItem = new JCheckBoxMenuItem(Strings.MENU_DATA[1]);
+		JRadioButtonMenuItem cbMenuItem = new JRadioButtonMenuItem(Strings.MENU_DATA[1]);
 		cbMenuItem.addActionListener(new MainMenu());
 		cbMenuItem.setForeground(Color.white);
 		cbMenuItem.setSelected(true);
@@ -137,14 +137,14 @@ public class Soartex_Patcher {
 		group.add(cbMenuItem);
 
 		//show outdated textures
-		cbMenuItem = new JCheckBoxMenuItem(Strings.MENU_DATA[2]);
+		cbMenuItem = new JRadioButtonMenuItem(Strings.MENU_DATA[2]);
 		cbMenuItem.addActionListener(new MainMenu());
 		cbMenuItem.setForeground(Color.white);
 		menu.add(cbMenuItem);
 		group.add(cbMenuItem);
 
 		//show lastest updated
-		cbMenuItem = new JCheckBoxMenuItem(Strings.MENU_DATA[3]);
+		cbMenuItem = new JRadioButtonMenuItem(Strings.MENU_DATA[3]);
 		cbMenuItem.addActionListener(new MainMenu());
 		cbMenuItem.setForeground(Color.white);
 		menu.add(cbMenuItem);
