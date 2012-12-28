@@ -72,7 +72,6 @@ public class UnZip {
 
 			zis.closeEntry();
 			zis.close();
-			System.out.println(" *Done*");
 
 		} catch (final IOException ex) {
 
