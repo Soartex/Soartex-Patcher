@@ -196,8 +196,8 @@ public class Patch_Controller {
 					if(data2.get(i)[0].equals(data.get(z)[0])){
 						Date oldFile = formatter.parse(data.get(z)[1]);
 						Date selectedMod = formatter.parse(data2.get(i)[1]);
-						if(oldFile.after(selectedMod)){
-							temp=data.remove(z);
+						if(oldFile.before(selectedMod)){
+							data.remove(z);
 							break;
 						}
 					}
@@ -205,6 +205,12 @@ public class Patch_Controller {
 				System.out.println("Added "+temp[0]+" | "+temp[1]);
 				finalData.add(temp);
 			}//outer
+			
+			//add the old mods that are not over written
+			for(int z=0;z<data.size(); z++){
+				System.out.println("Added "+data.get(z)[0]+" | "+data.get(z)[1]);
+				finalData.add(data.get(z));
+			}
 			
 			//write the file out
 			try{
@@ -239,7 +245,7 @@ public class Patch_Controller {
 
 		for (final File file : files) {
 			//debug
-			System.out.print("Extracting: "+file.getName());
+			System.out.println("Extracting: "+file.getName());
 			UnZip.unZipIt(file.getAbsolutePath(), Strings.TEMPORARY_DATA_LOCATION_B);
 		}
 		delete(new File(Strings.TEMPORARY_DATA_LOCATION_A));		
