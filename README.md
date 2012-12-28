@@ -1,4 +1,4 @@
-## Modded pack patcher for Soartex Fanver [![Build Status](https://secure.travis-ci.org/Soartex-Fanver/Soartex-Patcher.png?branch=master)](https://travis-ci.org/Soartex-Fanver/Soartex-Patcher)
+## Modded pack patcher for Soartex Fanver [![Build Status](https://secure.travis-ci.org/Soartex-Fanver/Soartex-Patcher.png?branch=rewrite)](https://travis-ci.org/Soartex-Fanver/Soartex-Patcher)
 
 ### Features
 
@@ -12,6 +12,4 @@
 
 To use this project just clone the repository.
 
-This project will check for the sources for each SWT Jar in a file called 'src.zip' under each platform's folder. Get them yourself for your own platform, the zip is ignored for obvious legal purposes.
-
-__This project is now compatible with Java 6; you no longer need to upgrade to Java 7, though it is recommended.__
+__This project is compatible with Java 6.__
