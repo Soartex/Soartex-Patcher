@@ -22,7 +22,7 @@ import net.soartex.patcher.helpers.Strings;
 public class Main {
 
 	//#################################
-	final static double VERSION_NUMBER = 1.2;
+	final static double VERSION_NUMBER = 1.3;
 	//#################################
 	
 	public static void main(String[] args) {
@@ -76,7 +76,7 @@ public class Main {
 		if(VERSION_NUMBER<Double.parseDouble(readline)){
 			final JFrame frame = new JFrame("Updated Avalible");
 			frame.setLocationRelativeTo(Soartex_Patcher.frame);
-			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+			frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 			GridLayout g1 = new GridLayout(3,1);
 			frame.setLayout(g1);
 
@@ -98,27 +98,14 @@ public class Main {
 					}
 				}
 			});  
-			JButton button2 = new JButton("Ignore");
-			button2.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e)
-				{
-					try {
-						frame.setVisible(false);
-						Soartex_Patcher.frame.setEnabled(true);
-					} catch (Exception e1) {
-						e1.printStackTrace();
-					}
-				}
-			});
 			frame.add(title, BorderLayout.NORTH);
 			frame.add(title2);
-			frame.add(button1);
+			frame.add(button1, BorderLayout.SOUTH);
+			
 			frame.setSize(300, 100);
 			frame.setResizable(false);
 			frame.setFocusableWindowState(true);
 			frame.setVisible(true);
-			
-			Soartex_Patcher.frame.setEnabled(false);
 		}	
 
 	}

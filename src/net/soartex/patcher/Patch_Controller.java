@@ -200,6 +200,8 @@ public class Patch_Controller {
 							data.remove(z);
 							break;
 						}
+						else
+							temp=data.remove(z);
 					}
 				}//innner
 				System.out.println("Added "+temp[0]+" | "+temp[1]);
