@@ -1,4 +1,4 @@
-## Modded pack patcher for Soartex Fanver [![Build Status](https://secure.travis-ci.org/Soartex-Fanver/Soartex-Patcher.png?branch=rewrite)](https://travis-ci.org/Soartex-Fanver/Soartex-Patcher)
+## Texture Pack Patcher for [Soartex Fanver](http://soartex.net) [![Build Status](https://secure.travis-ci.org/Soartex-Fanver/Soartex-Patcher.png?branch=master)](https://travis-ci.org/Soartex-Fanver/Soartex-Patcher)
 
 ### Features
 
@@ -10,6 +10,6 @@
 
 * * *
 
-To use this project just clone the repository.
+To use this project, just clone the repository. There is an ANT build script attatched.
 
 __This project is compatible with Java 6.__
